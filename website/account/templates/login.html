@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Login{% endblock title %}
+
+{% block header_bar %}
+{% endblock header_bar %}
+
+{% block header %}
+{% endblock header %}
+
+{% block trail_all %}
+{% endblock trail_all %}
+
+{% block content %}
+  <!-- start of login -->
+    <div id="login" class="large-4 large-centered columns">
+      <div class="header">
+        <h4>GateWay Login</h4>
+      </div>
+      <form method='POST' action='/login'>
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.account.label(class="right inline") }}
+          </div>
+          <div class="large-9 columns">
+            {{ form.account(placeholder="user") }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.password.label(class="right inline") }}
+          </div>
+          <div class="large-9 columns">
+            {{ form.password(placeholder="password") }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="lagre-4 large-offset-3 columns">
+            <button type="submit" class="button tiny">登录</button>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          </div>
+        </div>
+      </form>
+    </div>
+  <!-- end of login -->
+{% endblock content %}
+
+

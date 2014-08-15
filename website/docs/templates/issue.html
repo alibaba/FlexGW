@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block title %}Docs{% endblock %}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li><a href="{{ url_for('docs.index') }}">Docs</a></li>
+        <li class="current"><a href="{{ url_for('docs.issue') }}">Issue 列表</a></li>
+{% endblock trail %}
+
+{% block content %}
+    <!-- start of side-nav -->
+    <div id="side-nav" class="large-2 columns">
+      <ul class="side-nav">
+        <li class="active"><a href="{{ url_for('docs.issue') }}"><i class="fi-list"> </i>Issue 列表</a></li>
+      </ul>
+    </div>
+    <!-- end of side-nav -->
+
+    <!-- start of issue table -->
+    <div class="large-10 columns">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div data-alert class="alert-box {{ category }}">
+        {{ message }}
+        <a href="#" class="close">&times;</a>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <div class="row">
+        <div class="large-12 columns">
+          <div class="panel">
+            <h4>提示</h4>
+            <p>目前程序还在开发、测试阶段，各种功能都不稳定，可能产生错误提示，和HTTP 500 Error。有任何问题，请随时和我联系: xiong.xiaox@alibaba-inc.com</p>
+            <hr />
+            <h4>Site-to-Site</h4>
+            <ol>
+              <li><del>两个GateWay 之间建立多隧道时，如果断开其中一个隧道，会导致所有隧道都被断开。</del><span class="alert label">Bug</span></li>
+              <li><del>执行strongswan 系列命令时，可能会返回空数据，导致list 溢出报错。见：_tunnel_exec(cmd, message) 函数。</del><span class="alert label">Bug</span></li>
+              <li>两个GateWay 之间建立多隧道时，密钥会被最后一个隧道的设置覆盖。WTF!<span class="alert label">Bug</span></li>
+              <li><del>新建隧道、修改隧道、删除隧道，都需要用户去“VPN 服务管理”页面进行“配置文件下发&重载”。提示不够友好，且比较繁琐。如果做成自动化的，在重载配置时，则需要考虑对异常配置的处理。</del><span class="secondary label">Improve</span></li>
+              <li>log 日志不完善，需要更加精细的log 记录。<span class="secondary label">Improve</span></li>
+              <li>隧道状态信息排序显示。<span class="secondary label">Improve</span></li>
+              <li>连接、停止隧道，启动、关闭VPN 服务时，需要提示确认框。<span class="secondary label">Improve</span></li>
+              <li>流量显示页面，流量图需要改进。input、output 的label 得显示出来。<span class="secondary label">Improve</li>
+              <li>“VPN 服务管理”页面，需要增加VPN 服务的状态信息。系统信息也需要么？<span class="label">Feature</span></li>
+              <li>用户文档还没写。这个等程序完成之后，再进行。<span class="label">Feature</span></li>
+              <li>系统Account Settings，如修改密码等功能，还未完成。<span class="label">Feature</span></li>
+              <li>程序部署脚本，日常管理小工具，也需要考虑提供给用户。<span class="label">Feature</span></li>
+            </ol>
+            <hr />
+            <h4>拨号接入</h4>
+            <ol>
+              <li>功能未完成，暂不测试。</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of issue table -->
+{% endblock content %}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<!--[if IE 9]><html class="lt-ie10" lang="zh-cmn-Hans" > <![endif]-->
+<html class="no-js" lang="zh-cmn-Hans" >
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock title %} | GateWay</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation-icons.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+  {% block head %}{% endblock head %}
+
+  <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
+</head>
+
+<body>
+  {% block header %}
+  <!-- start of header -->
+  <header class="contain-to-grid">
+    <div class="row">
+      <div class="large-2 columns">
+        <a href="/"><h2>GateWay</h2></a>
+      </div>
+    </div>
+  </header>
+  <!-- end of header -->
+  {% endblock header %}
+
+  {% block header_bar %}
+  <!-- start of header-bar -->
+  <div id="nav" class="row">
+    <div class="large-12 columns">
+      <nav class="top-bar" data-topbar>
+        <ul class="title-area">
+          <li class="name">
+            <h1><a href="/"><i class="fi-home"></i></a></h1>
+          </li>
+          <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+        </ul>
+        <section class="top-bar-section">
+          <!-- Right Nav Section -->
+          <ul class="left">
+            <li class="has-dropdown {% if 'vpn' in request.endpoint %}active{% endif %}">
+              <a href="#">IPSec VPN</a>
+              <ul class="dropdown">
+                <li><a href="/vpn/sts">Site-to-Site</a></li>
+                <li><a href="/vpn/dial">拨号接入</a></li>
+              </ul>
+            </li>
+            <li{% if 'snat' in request.endpoint %} class="active" {% endif %}><a href="/snat">SNAT</a></li>
+          </ul>
+          <ul class="right">
+            <li{% if 'docs' in request.endpoint %} class="active" {% endif %}><a href="/docs"><i class="fi-page-doc"> </i>Docs</a></li>
+            <li class="has-dropdown">
+              <a href="#"><i class="fi-torso-business"> </i>admin</a>
+              <ul class="dropdown">
+                <li><a href="/account/settings">Settings</a></li>
+                <li><a href="/logout">Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+      </nav>
+    </div>
+  </div>
+  <!-- end of header-bar -->
+  {% endblock header_bar %}
+
+  {% block trail_all %}
+  <!-- start of trail -->
+  <div id="trail" class="row">
+    <div class="large-12 columns">
+      <ul class="breadcrumbs">
+        {% block trail %}{% endblock trail %}
+      </ul>
+    </div>
+  </div>
+  <!-- end of trail -->
+  {% endblock trail_all %}
+
+  <!-- start of content -->
+  <div id="content" class="row">
+    {% block content %}{% endblock content %}
+  </div>
+  <!-- end of content -->
+
+  <!-- start of footer -->
+  <footer class="row">
+    <div class="large-6 columns">
+      <ul class="inline-list">
+        <li>
+          <a href="http://www.aliyun.com/about" target="_blank">关于我们</a>
+        </li>
+        <li>
+          <a href="http://www.aliyun.com/law" target="_blank">法律声明</a>
+        </li>
+        <li>
+          <a href="http://www.aliyun.com/links" target="_blank">友情链接</a>
+        </li>
+      </ul>
+    </div>
+    <div class="large-6 columns">
+      <small class="right">
+        © 2009-2014 Aliyun.com 版权所有 ICP证：浙B2-20080101
+      </small>
+    </div>
+  </footer>
+  <!-- end of footer -->
+
+  <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
+  <script>
+    $(document).foundation();
+  </script>
+  {% block jsplugin %}{% endblock jsplugin %}
+</body>
+
+</html>

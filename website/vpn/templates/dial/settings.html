@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block title %}VPN Dial Settings{% endblock title%}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li><a href="{{ url_for('vpn.index') }}">VPN</a></li>
+        <li class="current"><a href="{{ url_for('vpn.dial_index') }}">Dial</a></li>
+{% endblock trail %}
+
+{% block content %}
+    <!-- start of side-nav -->
+    <div id="side-nav" class="large-2 columns">
+      <ul class="side-nav">
+        <li><a href="{{ url_for('vpn.dial_index') }}"><i class="fi-list"> </i>账号列表</a></li>
+        <li><a href="{{ url_for('vpn.dial_add') }}"><i class="fi-plus"> </i>新增账号</a></li>
+        <li class="active"><a href="{{ url_for('vpn.dial_settings') }}"><i class="fi-plus"> </i>设置地址池</a></li>
+        <li><a href="{{ url_for('vpn.console') }}"><i class="fi-wrench"> </i>VPN 服务管理</a></li>
+      </ul>
+    </div>
+    <!-- end of side-nav -->
+
+        <!-- start of sts vpn table -->
+    <div class="large-10 columns">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div data-alert class="alert-box {{ category }}">
+        {{ message }}
+        <a href="#" class="close">&times;</a>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <div data-alert class="alert-box">
+        Virtual IP Pool: 为VPN Server 分配给客户端的虚拟IP 地址池。
+      </div>
+      <form method="POST" action="{{ url_for('vpn.dial_add') }}">
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.ipool.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {% if form.ipool.errors %}
+            {{ form.ipool(class="error", value=form.ipool.value) }}
+            <small class="error">{{ form.ipool.errors[0] }}</small>
+            {% else %}
+            {{ form.ipool(value=form.ipool.value) }}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-3 columns large-offset-3">
+            <button class="tiny success">保存</button>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- end of sts vpn table -->
+{% endblock content %}
+

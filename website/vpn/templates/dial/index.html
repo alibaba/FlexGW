@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block title %}VPN Dial{% endblock title%}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li><a href="{{ url_for('vpn.index') }}">VPN</a></li>
+        <li class="current"><a href="{{ url_for('vpn.dial_index') }}">Dial</a></li>
+{% endblock trail %}
+
+{% block content %}
+    <!-- start of side-nav -->
+    <div id="side-nav" class="large-2 columns">
+      <ul class="side-nav">
+        <li class="active"><a href="{{ url_for('vpn.dial_index') }}"><i class="fi-list"> </i>账号列表</a></li>
+        <li><a href="{{ url_for('vpn.dial_add') }}"><i class="fi-plus"> </i>新增账号</a></li>
+        <li><a href="{{ url_for('vpn.dial_settings') }}"><i class="fi-plus"> </i>设置地址池</a></li>
+        <li><a href="{{ url_for('vpn.console') }}"><i class="fi-wrench"> </i>VPN 服务管理</a></li>
+      </ul>
+    </div>
+    <!-- end of side-nav -->
+
+    <!-- start of vpn table -->
+    <div class="large-10 columns">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div data-alert class="alert-box {{ category }}">
+        {{ message }}
+        <a href="#" class="close">&times;</a>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <table>
+        <thead>
+          <tr>
+            <th>账号名</th>
+            <th>认证类型</th>
+            <th>虚拟IP</th>
+            <th>真实IP</th>
+            <th>状态</th>
+            <th>查看</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if tunnels %}
+          {% for tunnel in tunnels %}
+          <tr>
+            <td><a href="{{ url_for('vpn.dial_id_settings', id=tunnel.id) }}">{{ tunnel.name }}</a></td>
+            <td>psk + xauth</td>
+            <td></td>
+            <td></td>
+            <td>
+              {% if tunnel.status %}
+                <span class="success label">Online</span>
+              {% else %}
+                <span class="secondary label">Offline</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{{ url_for('vpn.dial_flow', id=tunnel.id) }}" class="bitty button">流量</a>
+            </td>
+            <td>
+              <form method="POST" action="{{ url_for('vpn.updown') }}">
+                {{ form.tunnel_name(value=tunnel.name, type="hidden") }}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                {% if tunnel.status %}
+                {{ form.down(class="alert bitty button") }}
+                {% else %}
+                {{ form.up(class="alert bitty button") }}
+                {% endif %}
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+    <!-- end of vpn table -->
+{% endblock content %}
+

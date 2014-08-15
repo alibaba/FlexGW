@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block title %}SNAT 列表{% endblock %}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li><a href="{{ url_for('snat.index') }}">SNAT</a></li>
+        <li class="current"><a href="{{ url_for('snat.index') }}">SNAT 列表</a></li>
+{% endblock trail %}
+
+{% block content %}
+    <!-- start of side-nav -->
+    <div id="side-nav" class="large-2 columns">
+      <ul class="side-nav">
+        <li class="active"><a href="{{ url_for('snat.index') }}"><i class="fi-list"> </i>SNAT 列表</a></li>
+        <li><a href="{{ url_for('snat.add') }}"><i class="fi-plus"> </i>SNAT 新增</a></li>
+      </ul>
+    </div>
+    <!-- end of side-nav -->
+
+    <!-- start of snat table -->
+    <div id="snat-list" class="large-10 columns">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div data-alert class="alert-box {{ category }}">
+        {{ message }}
+        <a href="#" class="close">&times;</a>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <div class="row">
+        <div class="large-12 columns">
+          <table>
+            <thead>
+              <tr>
+                <th>转发网络</th>
+                <th>转发后IP</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if rules %}
+              {% for source, gateway in rules %}
+              <tr>
+                <td>{{ source }}</td>
+                <td>{{ gateway }}</td>
+                <td>
+                  <form method="POST" action="{{ url_for('snat.delete') }}">
+                    <input type="hidden" name="source" value="{{ source }}" />
+                    <input type="hidden" name="gateway" value="{{ gateway }}" />
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <button class="button bitty alert snat-del">删除</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- end of snat table -->
+{% endblock content %}

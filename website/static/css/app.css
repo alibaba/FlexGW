@@ -1,0 +1,176 @@
+/* overrides */
+
+
+/* -----------------------------------------
+   For a, body, header, footer
+----------------------------------------- */
+body,
+header.contain-to-grid {
+  background: white url(../img/light-grid.png) repeat;
+}
+
+header.contain-to-grid {
+  margin: 0 auto;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  text-decoration: none;
+}
+
+footer.row {
+  margin-top: 1.25rem;
+  padding: 1rem 0;
+  border-top: 1px solid #AAA;
+}
+
+footer > * a {
+  font-size: 60%;
+}
+
+
+/* -----------------------------------------
+   For nav
+----------------------------------------- */
+#nav .top-bar,
+#nav .top-bar-section ul,
+#nav .top-bar-section li:not(.has-form) a:not(.button),
+#nav .top-bar-section ul li > a,
+#nav .top-bar.expanded .title-area {
+  background: #379F7A url(../img/bg.png) repeat;
+  color: white;
+  text-decoration: none;
+}
+
+#nav .top-bar-section li:not(.has-form) a:not(.button):hover,
+#nav .top-bar-section .dropdown li:not(.has-form):hover > a:not(.button) {
+  background: #11766D;
+}
+
+#nav .top-bar-section .dropdown li:not(.has-form) a:not(.button) {
+  color: white;
+  background: #61ADA0;
+}
+
+#nav .top-bar-section li.active:not(.has-form) a:not(.button) {
+  background: #11766D;
+}
+
+#trail {
+  margin-top: 1.25rem;
+}
+
+.breadcrumbs {
+  padding: 0;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.breadcrumbs > *:before {
+  content: "›";
+}
+
+.breadcrumbs > * a {
+  color: #00A8C6;
+}
+
+.side-nav {
+  padding: 0;
+}
+
+.side-nav li.active > a:first-child:not(.button) {
+  color: #FFF;
+  background: #379F7A;
+}
+
+.side-nav li a,
+.side-nav li a:not(.button) {
+  color: #00A8C6;
+  background: #efefef;
+}
+
+.side-nav li a:not(.button):hover,
+.side-nav li a:not(.button):focus {
+  color: #40C0CB;
+}
+
+ul.square, ol {
+  font-size: 0.8125rem;
+}
+
+
+/* -----------------------------------------
+   For content, table
+----------------------------------------- */
+table.columns {
+  border-spacing: 0;
+  padding: 0;
+}
+
+td > .button,
+td form > .button {
+  margin: 0;
+}
+
+td form {
+  margin: 0;
+}
+
+td a {
+  color: #00A8C6;
+}
+
+.button {
+  background: #00A8C6;
+}
+
+.button.bitty {
+  padding: 5px;
+  font-size: 0.6875rem;
+}
+
+.button.alert {
+  background: #F1396D;
+}
+
+.form-label {
+  margin-top: 0.5625rem;
+}
+
+.switch {
+  padding: 0.5625rem 0;
+}
+
+.switch .has-tip {
+  border-bottom: none;
+}
+
+.pricing-table .title {
+  background: #474747;
+}
+
+
+/* -----------------------------------------
+   For login
+----------------------------------------- */
+#login {
+  margin-top: 5rem;
+  padding: 0;
+  background: #efefef;
+  box-shadow: 1px 1px 10px #c7c7c7;
+  -webkit-box-shadow: 1px 1px 10px #c7c7c7;
+  -moz-box-shadow: 1px 1px 10px #c7c7c7;
+}
+
+#login .header {
+  font-size: 2rem;
+  padding: 0.5625rem;
+  background: #379F7A;
+  text-align: center;
+}
+
+#login .header h4 {
+  color: #FFF;
+}
+
+#login form {
+  padding: 1rem;
+}

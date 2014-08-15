@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %} {% endblock %}
+{% block content %}
+    <!-- start of side nav -->
+    <div class="large-2 columns">
+      <ul class="side-nav">
+        <li><a href="/vpn">VPN</a></li>
+        <li><a href="/snat">SNAT</a></li>
+        <li class="active"><a href="/settings">Settings</a></li>
+      </ul>
+    </div>
+    <!-- end of side nav -->
+    <!-- start of vpn table -->
+    <div class="large-10 columns">
+      <div class="row">
+        <form class="large-12 columns">
+          <div class="row">
+            <div class="small-3 columns">
+              <label for="right-label" class="right inline">VPN Client IP Pool</label>
+            </div>
+            <div class="small-3 columns">
+              <input type="text" id="right-label" placeholder="192.168.7.0/24">
+            </div>
+            <div class="small-3 columns">
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-3 columns">
+              <label for="right-label" class="right inline">SNAT Gateway</label>
+            </div>
+            <div class="small-3 columns">
+              <input type="text" id="right-label" placeholder="10.101.81.89">
+            </div>
+            <div class="small-3 columns">
+            </div>
+          </div>
+          <div class="row">
+            <div class="small-3 columns large-offset-3">
+              <button class="tiny success">保存</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- end of vpn table -->
+{% endblock content %}
+
