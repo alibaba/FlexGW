@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-    website.vpn.forms
+    website.vpn.sts.forms
     ~~~~~~~~~~~~~~~~~~~~~
 
     vpn forms:
-        /vpn/add
-        /vpn/<int:id>/settings
+        /vpn/sts/add
+        /vpn/sts/<int:id>/settings
 
     :copyright: (c) 2014 by xiong.xiaox(xiong.xiaox@alibaba-inc.com).
 """
@@ -16,7 +16,7 @@ from wtforms import StringField, SelectField, TextAreaField, SubmitField
 from wtforms.validators import DataRequired, Length, IPAddress
 
 
-class StsAddForm(Form):
+class AddForm(Form):
     tunnel_name = StringField(u'隧道名称',
                               validators=[DataRequired(message=u'这是一个必选项！'),
                                           Length(max=20, message=u'帐号最长为20个字符！')])
@@ -40,24 +40,6 @@ class StsAddForm(Form):
     #: submit button
     save = SubmitField(u'保存')
     delete = SubmitField(u'删除')
-
-
-class DialAddForm(Form):
-    account = StringField(u'账号名',
-                          validators=[DataRequired(message=u'这是一个必选项！'),
-                                      Length(max=20, message=u'帐号最长为20个字符！')])
-    psk = StringField(u'预共享秘钥',
-                      validators=[DataRequired(message=u'这是一个必选项！')])
-    xauth = StringField(u'XAuth 密码',
-                        validators=[DataRequired(message=u'这是一个必选项！')])
-    #: submit button
-    save = SubmitField(u'保存')
-    delete = SubmitField(u'删除')
-
-
-class DialSettings(Form):
-    ipool = StringField(u'Virtual IP Pool',
-                        validators=[DataRequired(message=u'这是一个必选项！')])
 
 
 class ConsoleForm(Form):

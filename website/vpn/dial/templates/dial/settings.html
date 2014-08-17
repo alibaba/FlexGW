@@ -3,18 +3,18 @@
 
 {% block trail %}
         <li><a href="/">Home</a></li>
-        <li><a href="{{ url_for('vpn.index') }}">VPN</a></li>
-        <li class="current"><a href="{{ url_for('vpn.dial_index') }}">Dial</a></li>
+        <li>VPN</li>
+        <li class="current"><a href="{{ url_for('dial.index') }}">Dial</a></li>
 {% endblock trail %}
 
 {% block content %}
     <!-- start of side-nav -->
     <div id="side-nav" class="large-2 columns">
       <ul class="side-nav">
-        <li><a href="{{ url_for('vpn.dial_index') }}"><i class="fi-list"> </i>账号列表</a></li>
-        <li><a href="{{ url_for('vpn.dial_add') }}"><i class="fi-plus"> </i>新增账号</a></li>
-        <li class="active"><a href="{{ url_for('vpn.dial_settings') }}"><i class="fi-plus"> </i>设置地址池</a></li>
-        <li><a href="{{ url_for('vpn.console') }}"><i class="fi-wrench"> </i>VPN 服务管理</a></li>
+        <li><a href="{{ url_for('dial.index') }}"><i class="fi-list"> </i>账号列表</a></li>
+        <li><a href="{{ url_for('dial.add') }}"><i class="fi-plus"> </i>新增账号</a></li>
+        <li class="active"><a href="{{ url_for('dial.settings') }}"><i class="fi-plus"> </i>设置地址池</a></li>
+        <li><a href="{{ url_for('dial.console') }}"><i class="fi-wrench"> </i>VPN 服务管理</a></li>
       </ul>
     </div>
     <!-- end of side-nav -->
@@ -34,7 +34,7 @@
       <div data-alert class="alert-box">
         Virtual IP Pool: 为VPN Server 分配给客户端的虚拟IP 地址池。
       </div>
-      <form method="POST" action="{{ url_for('vpn.dial_add') }}">
+      <form method="POST" action="{{ url_for('dial.add') }}">
         <div class="row">
           <div class="large-3 columns">
             {{ form.ipool.label(class="right inline") }}

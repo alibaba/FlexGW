@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %}VPN Tunnel Flow{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/epoch.0.5.2.min.css') }}">
+{% endblock head %}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li><a href="{{ url_for('sts.index') }}">VPN</a></li>
+        <li class="current"><a href="{{ url_for('sts.flow', id=tunnel.id) }}">实时流量</a></li>
+{% endblock trail %}
+
+{% block content %}
+    <!-- start of side nav -->
+    <div class="large-2 columns">
+      <span class="label">隧道信息</span>
+      <ul class="square">
+        <li>隧道名：{{ tunnel.name }}</li>
+        <li>状态：
+          {% if tunnel.status %}
+          <span class="success label">Online</span>
+          {% else %}
+          <span class="secondary label">Offline</span>
+          {% endif %}
+        </li>
+        <li>本端IP： {{ tunnel.rules.left }}</li>
+        <li>本端子网：{{ tunnel.rules.leftsubnet }}</li>
+        <li>对端IP：{{ tunnel.rules.right }}</li>
+        <li>对端子网：{{ tunnel.rules.rightsubnet }}</li>
+      </ul>
+    </div>
+    <!-- end of side nav -->
+
+    <!-- start of flow div -->
+    <div class="large-10 columns">
+      <div id="real-time-area" class="epoch category20c" style="height: 200px"></div>
+    </div>
+    <!-- end of flow div -->
+{% endblock content %}
+{% block jsplugin %}
+<script src="{{ url_for('static', filename='js/vendor/d3.v3.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/epoch.0.5.2.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/data.js') }}"></script>
+<script>
+$(function() {
+    var data = new RealTimeData('{{ tunnel.name }}');
+
+    var chart = $('#real-time-area').epoch({
+        type: 'time.area',
+        data: data.history(),
+        axes: ['left', 'bottom', 'right']
+    });
+
+    setInterval(function() { chart.push(data.next()); }, 1000);
+    chart.push(data.next());
+});
+</script>
+{% endblock jsplugin %}

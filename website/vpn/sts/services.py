@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    website.vpn.services
-    ~~~~~~~~~~~~~~~~~~~~
+    website.vpn.sts.services
+    ~~~~~~~~~~~~~~~~~~~~~~~~
 
-    vpn services api.
+    vpn site-to-site services api.
 
     :copyright: (c) 2014 by xiong.xiaox(xiong.xiaox@alibaba-inc.com).
 """
@@ -16,7 +16,7 @@ from flask import render_template, flash
 
 from website import db
 from website.services import exec_command
-from website.vpn.models import Tunnels, Psk, XAuth
+from website.vpn.sts.models import Tunnels
 
 
 class VpnConfig(object):
@@ -24,10 +24,10 @@ class VpnConfig(object):
     secrets_file = '/etc/strongswan/ipsec.secrets'
     conf_file = '/etc/strongswan/ipsec.conf'
 
-    secrets_template = 'ipsec.secrets'
-    conf_template = 'ipsec.conf'
+    secrets_template = 'sts/ipsec.secrets'
+    conf_template = 'sts/ipsec.conf'
 
-    _auth_types = ['secret', 'xauth']
+    _auth_types = ['secret']
 
     def __init__(self, conf_file=None, secrets_file=None):
         if conf_file:
@@ -35,82 +35,47 @@ class VpnConfig(object):
         if secrets_file:
             self.secrets_file = secrets_file
 
-    def _update_tunnel(self, tunnel_id, tunnel_name, rules, auth_type):
-        #: store to instance
-        self.tunnel = Tunnels.query.filter_by(id=tunnel_id).first()
-        if self.tunnel is None:
-            self.tunnel = Tunnels(tunnel_name, rules, auth_type)
-            db.session.add(self.tunnel)
-            db.session.commit()
-        else:
-            self.tunnel.name = tunnel_name
-            self.tunnel.rules = rules
-            self.tunnel.auth_type = auth_type
-        return True
-
-    def _update_psk(self, psk):
-        tunnel_psk = Psk.query.filter_by(tunnel_id=self.tunnel.id).first()
-        if tunnel_psk is None:
-            tunnel_psk = Psk(self.tunnel.id, psk)
-            db.session.add(tunnel_psk)
-        else:
-            tunnel_psk.data = psk
-        #: store to instance
-        self.psk = psk
-        return True
-
-    def _update_xauth(self, xauth):
-        tunnel_xauth = XAuth.query.filter_by(tunnel_id=self.tunnel.id).first()
-        if tunnel_xauth is None:
-            tunnel_xauth = XAuth(self.tunnel.id, xauth)
-            db.session.add(tunnel_xauth)
-        else:
-            tunnel_xauth.data = xauth
-        #: store to instance
-        self.xauth = xauth
-        return True
-
     def _get_tunnels(self):
         data = Tunnels.query.all()
-        tunnels = []
-        dial = []
         if data:
-            for item in data:
-                if item.auth_type == 'secret':
-                    tunnels.append({'id': item.id, 'name': item.name,
-                                    'rules': json.loads(item.rules)})
-                else:
-                    dial.append({'id': item.id, 'account': item.name})
-            return tunnels, dial
+            return [{'id': item.id, 'name': item.name,
+                     'psk': item.psk, 'rules': json.loads(item.rules)}
+                    for item in data]
         return None
 
     def _commit_conf_file(self):
-        tunnels, dial = self._get_tunnels()
+        tunnels = self._get_tunnels()
         data = render_template(self.conf_template, tunnels=tunnels)
-        with open(self.conf_file, 'w') as f:
-            f.write(data)
+        try:
+            with open(self.conf_file, 'w') as f:
+                f.write(data)
+        except:
+            return False
         return True
 
     def _commit_secrets_file(self):
-        t_data, d_data = self._get_tunnels()
+        data = self._get_tunnels()
         tunnels = [{'leftid': i['rules']['leftid'],
                     'rightid': i['rules']['rightid'],
-                    'psk': get_tunnel_psk(i['id'])} for i in t_data]
-        dials = [{'account': i['account'],
-                  'psk': get_tunnel_psk(i['id']),
-                  'xauth': get_tunnel_xauth(i['id'])} for i in d_data]
-        data = render_template(self.secrets_template, tunnels=tunnels, dials=dials)
-        with open(self.secrets_file, 'w') as f:
-            f.write(data)
+                    'psk': i['psk']} for i in data]
+        data = render_template(self.secrets_template, tunnels=tunnels)
+        try:
+            with open(self.secrets_file, 'w') as f:
+                f.write(data)
+        except:
+            return False
         return True
 
-    def update(self, tunnel_id, tunnel_name, rules,
-               auth_type, psk=None, xauth=None):
-        self._update_tunnel(tunnel_id, tunnel_name, rules, auth_type)
-        if psk:
-            self._update_psk(psk)
-        if xauth:
-            self._update_xauth(xauth)
+    def update_tunnel(self, tunnel_id, tunnel_name, rules, psk):
+        #: store to instance
+        self.tunnel = Tunnels.query.filter_by(id=tunnel_id).first()
+        if self.tunnel is None:
+            self.tunnel = Tunnels(tunnel_name, rules, psk)
+            db.session.add(self.tunnel)
+        else:
+            self.tunnel.name = tunnel_name
+            self.tunnel.rules = rules
+            self.tunnel.psk = psk
         db.session.commit()
         return True
 
@@ -251,7 +216,7 @@ class VpnServer(object):
         return False
 
 
-def sts_vpn_settings(form, tunnel_id=None):
+def vpn_settings(form, tunnel_id=None):
     tunnel = VpnConfig()
     vpn = VpnServer()
     rules = {'auto': form.start_type.data, 'esp': form.protocol_type.data,
@@ -259,31 +224,16 @@ def sts_vpn_settings(form, tunnel_id=None):
              'leftid': form.tunnel_name.data, 'right': form.remote_ip.data,
              'rightsubnet': form.remote_subnet.data, 'rightid': form.tunnel_name.data,
              'authby': 'secret'}
-    auth_type = 'secret'
-    if tunnel.update(tunnel_id, form.tunnel_name.data, json.dumps(rules), auth_type,
-                     form.psk.data) and vpn.reload:
+    if tunnel.update_tunnel(tunnel_id, form.tunnel_name.data, json.dumps(rules),
+                            form.psk.data) and vpn.reload:
         return True
     return False
 
 
-def dial_vpn_settings(form, tunnel_id=None):
-    tunnel = VpnConfig()
-    vpn = VpnServer()
-    rules = None
-    auth_type = 'xauth'
-    if tunnel.update(tunnel_id, form.account.data, rules, auth_type,
-                     form.psk.data, form.xauth.data) and vpn.reload:
-        return True
-    return False
-
-
-def vpn_del(id, type='secret'):
+def vpn_del(id):
     config = VpnConfig()
     vpn = VpnServer()
-    if type == 'secret':
-        tunnel = get_tunnels(id, True)[0]
-    else:
-        tunnel = get_tunnels(id, True, type='xauth')[0]
+    tunnel = get_tunnels(id, True)[0]
     if tunnel['status']:
         vpn.tunnel_down(tunnel['name'])
     if config.delete(id) and vpn.reload:
@@ -291,30 +241,17 @@ def vpn_del(id, type='secret'):
     return False
 
 
-def get_tunnels(id=None, status=False, type='sts'):
+def get_tunnels(id=None, status=False):
     if id:
         data = Tunnels.query.filter_by(id=id)
     else:
         data = Tunnels.query.all()
     if data:
-        if type == 'sts':
-            tunnels = [{'id': item.id, 'name': item.name,
-                        'rules': json.loads(item.rules)} for item in data
-                        if item.auth_type == 'secret']
-        else:
-            tunnels = [{'id': item.id, 'name': item.name} for item in data
-                        if item.auth_type == 'xauth']
+        tunnels = [{'id': item.id, 'name': item.name, 'psk': item.psk,
+                    'rules': json.loads(item.rules)} for item in data]
         if status:
             vpn = VpnServer()
             for tunnel in tunnels:
                 tunnel['status'] = vpn.tunnel_status(tunnel['name'])
         return tunnels
     return None
-
-
-def get_tunnel_psk(id):
-    return Psk.query.filter_by(tunnel_id=id).first().data
-
-
-def get_tunnel_xauth(id):
-    return XAuth.query.filter_by(tunnel_id=id).first().data

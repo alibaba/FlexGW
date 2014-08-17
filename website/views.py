@@ -31,7 +31,7 @@ def default():
     if not current_user.member_permission.can():
         flash(u' :)')
         return redirect(url_for('account.login'))
-    return redirect(url_for('vpn.index'))
+    return redirect(url_for('sts.index'))
 
 
 @app.route('/settings')

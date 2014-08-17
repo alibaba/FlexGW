@@ -1,20 +1,19 @@
 {% extends "layout.html" %}
-{% block title %} VPN Site-to-Site 修改隧道{% endblock %}
+{% block title %}VPN Site-to-Site 新增隧道{% endblock title%}
 
 {% block trail %}
         <li><a href="/">Home</a></li>
-        <li><a href="{{ url_for('vpn.index') }}">VPN</a></li>
-        <li class="current"><a href="{{ url_for('vpn.sts_index') }}">Site-to-Site</a></li>
+        <li><a href="{{ url_for('sts.index') }}">VPN</a></li>
+        <li class="current"><a href="{{ url_for('sts.index') }}">Site-to-Site</a></li>
 {% endblock trail %}
 
 {% block content %}
     <!-- start of side-nav -->
     <div id="side-nav" class="large-2 columns">
       <ul class="side-nav">
-        <li><a href="{{ url_for('vpn.sts_index') }}"><i class="fi-list"> </i>隧道列表</a></li>
-        <li><a href="{{ url_for('vpn.sts_add') }}"><i class="fi-plus"> </i>新增隧道</a></li>
-        <li><a href="{{ url_for('vpn.console') }}"><i class="fi-wrench"> </i>VPN 服务管理</a></li>
-        <li class="active"><a href="{{ url_for('vpn.sts_settings', id=tunnel.id) }}"><i class="fi-pencil"> </i>修改</a></li>
+        <li><a href="{{ url_for('sts.index') }}"><i class="fi-list"> </i>隧道列表</a></li>
+        <li class="active"><a href="{{ url_for('sts.add') }}"><i class="fi-plus"> </i>新增隧道</a></li>
+        <li><a href="{{ url_for('sts.console') }}"><i class="fi-wrench"> </i>VPN 服务管理</a></li>
       </ul>
     </div>
     <!-- end of side-nav -->
@@ -31,7 +30,7 @@
       {% endfor %}
       {% endif %}
       {% endwith %}
-      <form method="POST" action="{{ url_for('vpn.sts_settings', id=tunnel.id) }}">
+      <form method="POST" action="{{ url_for('sts.add') }}">
         <div class="row">
           <div class="large-3 columns">
             {{ form.tunnel_name.label(class="right inline") }}
@@ -41,7 +40,7 @@
             {{ form.tunnel_name(class="error", value=form.tunnel_name.value) }}
             <small class="error">{{ form.tunnel_name.errors[0] }}</small>
             {% else %}
-            {{ form.tunnel_name(value=tunnel.name) }}
+            {{ form.tunnel_name(placeholder="home") }}
             {% endif %}
           </div>
         </div>
@@ -70,7 +69,7 @@
             {{ form.local_ip(class="error", value=form.local_ip.value) }}
             <small class="error">{{ form.local_ip.errors[0] }}</small>
             {% else %}
-            {{ form.local_ip(value=tunnel.rules.left) }}
+            {{ form.local_ip(placeholder="192.168.0.1") }}
             {% endif %}
           </div>
         </div>
@@ -83,7 +82,7 @@
             {{ form.local_subnet(class="error", value=form.local_subnet.value) }}
             <small class="error">{{ form.local_subnet.errors[0] }}</small>
             {% else %}
-            {{ form.local_subnet(value=tunnel.rules.leftsubnet) }}
+            {{ form.local_subnet(placeholder="10.1.0.0/16") }}
             {% endif %}
           </div>
         </div>
@@ -96,7 +95,7 @@
             {{ form.remote_ip(class="error", value=form.remote_ip.value) }}
             <small class="error">{{ form.remote_ip.errors[0] }}</small>
             {% else %}
-            {{ form.remote_ip(value=tunnel.rules.right) }}
+            {{ form.remote_ip(placeholder="192.168.0.2") }}
             {% endif %}
           </div>
         </div>
@@ -109,7 +108,7 @@
             {{ form.remote_subnet(class="error", value=form.remote_subnet.value) }}
             <small class="error">{{ form.remote_subnet.errors[0] }}</small>
             {% else %}
-            {{ form.remote_subnet }}
+            {{ form.remote_subnet(placeholder="10.2.0.0/16") }}
             {% endif %}
           </div>
         </div>
@@ -122,21 +121,19 @@
             {{ form.psk(class="error", value=form.psk.value) }}
             <small class="error">{{ form.psk.errors[0] }}</small>
             {% else %}
-            {{ form.psk(value=tunnel.psk) }}
+            {{ form.psk(placeholder="*DZ4J}[/*I7btVP6&lzXFyBlSV%D3@^]") }}
             {% endif %}
           </div>
         </div>
 
         <div class="row">
           <div class="large-3 columns large-offset-3">
-            {{ form.save(class="success tiny button") }}
+            <button class="tiny success">保存</button>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           </div>
-          <div class="large-2 columns end">
-            {{ form.delete(class="alert tiny button") }}
-          </div>
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         </div>
       </form>
     </div>
     <!-- end of sts vpn table -->
 {% endblock content %}
+

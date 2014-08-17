@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    website.vpn.helpers
-    ~~~~~~~~~~~~~~~~~~~
+    website.vpn.sts.helpers
+    ~~~~~~~~~~~~~~~~~~~~~~~
 
-    vpn helpers api.
+    vpn sts helpers api.
 
     :copyright: (c) 2014 by xiong.xiaox(xiong.xiaox@alibaba-inc.com).
 """

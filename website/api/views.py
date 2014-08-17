@@ -16,7 +16,7 @@ from flask import request, jsonify
 
 from flask.ext.login import login_required
 
-from website.vpn.services import VpnServer
+from website.vpn.sts.services import VpnServer
 
 
 api = Blueprint('api', __name__, url_prefix='/api')

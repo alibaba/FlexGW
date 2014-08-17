@@ -31,12 +31,14 @@ CsrfProtect(app)
 import website.views
 
 from website.account.views import account
-from website.vpn.views import vpn
+from website.vpn.sts.views import sts
+from website.vpn.dial.views import dial
 from website.snat.views import snat
 from website.api.views import api
 from website.docs.views import docs
 app.register_blueprint(account)
-app.register_blueprint(vpn)
+app.register_blueprint(sts)
+app.register_blueprint(dial)
 app.register_blueprint(snat)
 app.register_blueprint(api)
 app.register_blueprint(docs)
