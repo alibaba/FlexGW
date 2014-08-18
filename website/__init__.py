@@ -46,7 +46,9 @@ app.register_blueprint(docs)
 import logging
 from logging import Formatter
 from logging.handlers import TimedRotatingFileHandler
-file_handler = TimedRotatingFileHandler('logs/website.log',
+website_log = '%s/logs/website.log' % os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                                   os.path.pardir))
+file_handler = TimedRotatingFileHandler(website_log,
                                         'W0', 1, backupCount=7)
 file_handler.suffix = '%Y%m%d-%H%M'
 file_handler.setLevel(logging.INFO)

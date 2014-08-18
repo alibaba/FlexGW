@@ -8,16 +8,7 @@
 {% endblock trail %}
 
 {% block content %}
-    <!-- start of side-nav -->
-    <div id="side-nav" class="large-2 columns">
-      <ul class="side-nav">
-        <li><a href="{{ url_for('dial.index') }}"><i class="fi-list"> </i>账号列表</a></li>
-        <li class="active"><a href="{{ url_for('dial.add') }}"><i class="fi-plus"> </i>新增账号</a></li>
-        <li><a href="{{ url_for('dial.settings') }}"><i class="fi-plus"> </i>设置地址池</a></li>
-        <li><a href="{{ url_for('dial.console') }}"><i class="fi-wrench"> </i>VPN 服务管理</a></li>
-      </ul>
-    </div>
-    <!-- end of side-nav -->
+    {% include "dial/sidenav.html" %}
 
     <!-- start of sts vpn table -->
     <div class="large-10 columns">

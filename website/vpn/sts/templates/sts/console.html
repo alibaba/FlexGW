@@ -8,15 +8,7 @@
 {% endblock trail %}
 
 {% block content %}
-    <!-- start of side-nav -->
-    <div id="side-nav" class="large-2 columns">
-      <ul class="side-nav">
-        <li><a href="{{ url_for('sts.index') }}"><i class="fi-list"> </i>隧道列表</a></li>
-        <li><a href="{{ url_for('sts.add') }}"><i class="fi-plus"> </i>新增隧道</a></li>
-        <li class="active"><a href="{{ url_for('sts.console') }}"><i class="fi-wrench"> </i>VPN 服务管理</a></li>
-      </ul>
-    </div>
-    <!-- end of side-nav -->
+    {% include "sts/sidenav.html" %}
 
     <!-- start of console content -->
     <div class="large-10 columns">

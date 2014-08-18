@@ -31,6 +31,8 @@ class AddForm(Form):
 class SettingsForm(Form):
     ipool = StringField(u'虚拟IP 地址池',
                         validators=[DataRequired(message=u'这是一个必选项！')])
+    subnet = StringField(u'子网网段',
+                         validators=[DataRequired(message=u'这是一个必选项！')])
 
 
 class ConsoleForm(Form):

@@ -19,13 +19,14 @@ from flask import flash
 from flask.ext.login import login_required
 
 from website.vpn.dial.services import get_accounts, account_update, account_del
-from website.vpn.dial.services import VpnServer
+from website.vpn.dial.services import VpnServer, settings_update
 from website.vpn.dial.forms import AddForm, SettingsForm, ConsoleForm
-from website.vpn.dial.models import Account
+from website.vpn.dial.models import Account, Settings
 
 
 dial = Blueprint('dial', __name__, url_prefix='/vpn/dial',
-                 template_folder='templates')
+                 template_folder='templates',
+                 static_folder='static')
 
 
 @dial.route('/')
@@ -57,9 +58,12 @@ def add():
 @login_required
 def settings():
     form = SettingsForm()
+    settings = Settings.query.get(1)
     if form.validate_on_submit():
-        pass
-    return render_template('dial/settings.html', form=form)
+        if settings_update(form):
+            flash(u'修改配置成功！', 'success')
+            return redirect(url_for('dial.settings'))
+    return render_template('dial/settings.html', settings=settings, form=form)
 
 
 @dial.route('/<int:id>/settings', methods=['GET', 'POST'])
@@ -76,7 +80,7 @@ def id_settings(id):
         if form.save.data:
             if account_update(form, id):
                 flash(u'修改隧道配置成功！', 'success')
-                return redirect(url_for('dial.settings', id=id))
+                return redirect(url_for('dial.id_settings', id=id))
     return render_template('dial/view.html', account=account[0], form=form)
 
 
@@ -93,3 +97,9 @@ def console():
         if form.re_load.data and vpn.reload:
             flash(u'VPN 服务配置生效完成！', 'success')
     return render_template('dial/console.html', form=form)
+
+
+@dial.route('/download')
+@login_required
+def download():
+    return render_template('dial/download.html')

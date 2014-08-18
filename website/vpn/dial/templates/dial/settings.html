@@ -8,16 +8,7 @@
 {% endblock trail %}
 
 {% block content %}
-    <!-- start of side-nav -->
-    <div id="side-nav" class="large-2 columns">
-      <ul class="side-nav">
-        <li><a href="{{ url_for('dial.index') }}"><i class="fi-list"> </i>账号列表</a></li>
-        <li><a href="{{ url_for('dial.add') }}"><i class="fi-plus"> </i>新增账号</a></li>
-        <li class="active"><a href="{{ url_for('dial.settings') }}"><i class="fi-plus"> </i>设置地址池</a></li>
-        <li><a href="{{ url_for('dial.console') }}"><i class="fi-wrench"> </i>VPN 服务管理</a></li>
-      </ul>
-    </div>
-    <!-- end of side-nav -->
+    {% include "dial/sidenav.html" %}
 
         <!-- start of sts vpn table -->
     <div class="large-10 columns">
@@ -34,7 +25,7 @@
       <div data-alert class="alert-box">
         Virtual IP Pool: 为VPN Server 分配给客户端的虚拟IP 地址池。
       </div>
-      <form method="POST" action="{{ url_for('dial.add') }}">
+      <form method="POST" action="{{ url_for('dial.settings') }}">
         <div class="row">
           <div class="large-3 columns">
             {{ form.ipool.label(class="right inline") }}
@@ -44,7 +35,21 @@
             {{ form.ipool(class="error", value=form.ipool.value) }}
             <small class="error">{{ form.ipool.errors[0] }}</small>
             {% else %}
-            {{ form.ipool(value=form.ipool.value) }}
+            {{ form.ipool(value=account.ipool) }}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.subnet.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {% if form.subnet.errors %}
+            {{ form.subnet(class="error", value=form.subnet.value) }}
+            <small class="error">{{ form.subnet.errors[0] }}</small>
+            {% else %}
+            {{ form.subnet(value=account.subnet) }}
             {% endif %}
           </div>
         </div>

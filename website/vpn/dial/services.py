@@ -14,6 +14,7 @@ from flask import render_template, flash
 from website import db
 from website.services import exec_command
 from website.vpn.dial.models import Account, Settings
+from website.vpn.dial.helpers import exchange_maskint
 
 
 class VpnConfig(object):
@@ -26,15 +27,19 @@ class VpnConfig(object):
         if conf_file:
             self.conf_file = conf_file
 
-    def _get_ip_pool(self):
+    def _get_settings(self):
         data = Settings.query.get(1)
         if data:
-            return data.ipool
+            return data.ipool, data.subnet
         return None
 
     def _commit_conf_file(self):
-        ipool = self._get_ip_pool()
-        data = render_template(self.conf_template, ipool=ipool)
+        r_ipool, r_subnet = self._get_settings()
+        ipool = "%s %s" % (r_ipool.split('/')[0].strip(),
+                           exchange_maskint(int(r_ipool.split('/')[1].strip())))
+        subnet = "%s %s" % (r_subnet.split('/')[0].strip(),
+                            exchange_maskint(int(r_subnet.split('/')[1].strip())))
+        data = render_template(self.conf_template, ipool=ipool, subnet=subnet)
         try:
             with open(self.conf_file, 'w') as f:
                 f.write(data)
@@ -49,17 +54,18 @@ class VpnConfig(object):
             db.session.add(account)
         else:
             account.name = name
-            account.update_password(password)
+            account.password = password
         db.session.commit()
         return True
 
-    def update_ip_pool(self, ip_pool):
+    def update_settings(self, ipool, subnet):
         settings = Settings.query.get(1)
         if settings is None:
-            settings = Settings(ip_pool)
+            settings = Settings(ipool, subnet)
             db.session.add(settings)
         else:
-            settings.ipool = ip_pool
+            settings.ipool = ipool
+            settings.subnet = subnet
         db.session.commit()
         return True
 
@@ -128,7 +134,7 @@ class VpnServer(object):
     def reload(self):
         tunnel = VpnConfig()
         if not tunnel.commit():
-            message = u'VPN 服务配置文件下发失败，请重试。'
+            message = u'VPN 服务配置文件下发失败。'
             flash(message, 'alert')
             return False
         if self._reload_conf():
@@ -164,7 +170,8 @@ def get_accounts(id=None, status=False):
         data = Account.query.all()
 
     if data:
-        accounts = [{'id': i.id, 'name': i.name, 'created_at': i.created_at}
+        accounts = [{'id': i.id, 'name': i.name,
+                     'password': i.password, 'created_at': i.created_at}
                     for i in data]
         if status:
             vpn = VpnServer()
@@ -179,7 +186,6 @@ def get_accounts(id=None, status=False):
         return accounts
     return None
 
-
 def account_update(form, id=None):
     account = VpnConfig()
     vpn = VpnServer()
@@ -187,10 +193,16 @@ def account_update(form, id=None):
         return True
     return False
 
-
 def account_del(id):
     config = VpnConfig()
     vpn = VpnServer()
     if config.delete(id) and vpn.reload:
+        return True
+    return False
+
+def settings_update(form):
+    account = VpnConfig()
+    vpn = VpnServer()
+    if account.update_settings(form.ipool.data, form.subnet.data) and vpn.reload:
         return True
     return False

@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-    website.vpn.sts.models
-    ~~~~~~~~~~~~~~~~~~~~~~
+    website.vpn.dial.models
+    ~~~~~~~~~~~~~~~~~~~~~~~
 
-    vpn sts system models.
+    vpn dial system models.
 
     :copyright: (c) 2014 by xiong.xiaox(xiong.xiaox@alibaba-inc.com).
 """
 
 
 from datetime import datetime
-
-from werkzeug.security import generate_password_hash, check_password_hash
 
 from website import db
 
@@ -27,7 +25,7 @@ class Account(db.Model):
 
     def __init__(self, name, password, created_at=datetime.now()):
         self.name = name
-        self.password = generate_password_hash(password, method='sha1', salt_length=7)
+        self.password = password
         self.created_at = created_at
 
     def __repr__(self):
@@ -36,14 +34,6 @@ class Account(db.Model):
     def get_id(self):
         return unicode(self.id)
 
-    def check_password(self, pw):
-        return check_password_hash(self.password, pw)
-
-    def update_password(self, pw):
-        self.password = generate_password_hash(pw, method='sha1', salt_length=7)
-        db.session.commit()
-        return True
-
 
 class Settings(db.Model):
     """settings for dial or common settings."""
@@ -51,9 +41,11 @@ class Settings(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     ipool = db.Column(db.String(80))
+    subnet = db.Column(db.String(80))
 
-    def __init__(self, ipool):
+    def __init__(self, ipool, subnet):
         self.ipool = ipool
+        self.subnet = subnet
 
     def __repr__(self):
         return '<Settings %s>' % self.id
