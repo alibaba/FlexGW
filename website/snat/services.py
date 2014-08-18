@@ -26,7 +26,7 @@ def iptables_get_snat_rules():
         flash(message, 'alert')
         return False
     rules = []
-    for item in r['stdout']:
+    for item in r['stdout'].split('\n'):
         if '-j SNAT' in item:
             t = item.split()
             rules.append((t[t.index('-s')+1], t[t.index('--to-source')+1]))
