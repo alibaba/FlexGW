@@ -9,6 +9,8 @@
 """
 
 
+from datetime import datetime
+
 from flask import render_template, flash
 
 from website import db
@@ -171,19 +173,19 @@ def get_accounts(id=None, status=False):
 
     if data:
         accounts = [{'id': i.id, 'name': i.name,
-                     'password': i.password, 'created_at': i.created_at}
+                     'password': i.password, 'created_at': i.created_at.strftime('%Y-%m-%d %H:%M:%S')}
                     for i in data]
         if status:
             vpn = VpnServer()
             for account in accounts:
                 status = vpn.account_status(account['name'])
                 if status:
-                    account['rip'] = status['rip']
+                    account['rip'] = status['rip'].split(':')[0]
                     account['vip'] = status['vip']
                     account['br'] = status['br']
                     account['bs'] = status['bs']
-                    account['ct'] = status['ct']
-        return accounts
+                    account['ct'] = datetime.fromtimestamp(int(status['ct'])).strftime('%Y-%m-%d %H:%M:%S')
+        return sorted(accounts, key=lambda x: x.get('rip'), reverse=True)
     return None
 
 def account_update(form, id=None):
