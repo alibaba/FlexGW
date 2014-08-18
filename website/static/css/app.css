@@ -144,7 +144,18 @@ td a {
 }
 
 .pricing-table .title {
-  background: #474747;
+  background: #379F7A;
+  color: #FFF;
+}
+
+.pricing-table .description {
+  min-height: 80px;
+  color: #424242;
+  border-bottom: dashed 1px #DDD;
+}
+
+.pricing-table .cta-button .alert {
+  background: #F35F55;
 }
 
 

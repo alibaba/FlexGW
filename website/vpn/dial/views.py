@@ -96,7 +96,7 @@ def console():
             flash(u'VPN 服务启动成功！', 'success')
         if form.re_load.data and vpn.reload:
             flash(u'VPN 服务配置生效完成！', 'success')
-    return render_template('dial/console.html', form=form)
+    return render_template('dial/console.html', status=vpn.status, form=form)
 
 
 @dial.route('/download')

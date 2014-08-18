@@ -171,6 +171,11 @@ class VpnServer(object):
             return True
         return False
 
+    @property
+    def status(self):
+        cmd = ['strongswan', 'status']
+        return self._exec(cmd)
+
     def tunnel_status(self, tunnel_name):
         cmd = ['strongswan', 'status', tunnel_name]
         if self._exec(cmd):
