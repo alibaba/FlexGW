@@ -27,10 +27,9 @@
           <tr>
             <th>隧道名</th>
             <th>启动类型</th>
-            <th>本端IP</th>
-            <th>本端子网</th>
-            <th>对端IP</th>
-            <th>对端子网</th>
+            <th>本端私网</th>
+            <th>对端EIP</th>
+            <th>对端私网</th>
             <th>状态</th>
             <th>查看</th>
             <th>操作</th>
@@ -41,8 +40,7 @@
           {% for tunnel in tunnels %}
           <tr>
             <td><a href="{{ url_for('sts.settings', id=tunnel.id) }}">{{ tunnel.name }}</a></td>
-            <td>{{ tunnel.rules.auto }}</td>
-            <td>{{ tunnel.rules.left }}</td>
+            <td>{% if tunnel.rules.auto == 'add' %}手工连接{% else %}服务启动自动连接{% endif %}</td>
             <td>{{ tunnel.rules.leftsubnet }}</td>
             <td>{{ tunnel.rules.right }}</td>
             <td>{{ tunnel.rules.rightsubnet }}</td>

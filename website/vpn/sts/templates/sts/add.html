@@ -46,27 +46,6 @@
         </div>
         <div class="row">
           <div class="large-3 columns">
-            {{ form.protocol_type.label(class="right inline") }}
-          </div>
-          <div class="large-5 columns end">
-            {{ form.protocol_type }}
-          </div>
-        </div>
-        <div class="row">
-          <div class="large-3 columns">
-            {{ form.local_ip.label(class="right inline") }}
-          </div>
-          <div class="large-5 columns end">
-            {% if form.local_ip.errors %}
-            {{ form.local_ip(class="error", value=form.local_ip.value) }}
-            <small class="error">{{ form.local_ip.errors[0] }}</small>
-            {% else %}
-            {{ form.local_ip(placeholder="192.168.0.1") }}
-            {% endif %}
-          </div>
-        </div>
-        <div class="row">
-          <div class="large-3 columns">
             {{ form.local_subnet.label(class="right inline") }}
           </div>
           <div class="large-5 columns end">

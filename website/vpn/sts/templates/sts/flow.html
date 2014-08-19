@@ -24,10 +24,9 @@
           <span class="secondary label">Offline</span>
           {% endif %}
         </li>
-        <li>本端IP： {{ tunnel.rules.left }}</li>
-        <li>本端子网：{{ tunnel.rules.leftsubnet }}</li>
-        <li>对端IP：{{ tunnel.rules.right }}</li>
-        <li>对端子网：{{ tunnel.rules.rightsubnet }}</li>
+        <li>本端私网：{{ tunnel.rules.leftsubnet }}</li>
+        <li>对端EIP：{{ tunnel.rules.right }}</li>
+        <li>对端私网：{{ tunnel.rules.rightsubnet }}</li>
       </ul>
     </div>
     <!-- end of side nav -->

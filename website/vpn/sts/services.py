@@ -55,9 +55,12 @@ class VpnConfig(object):
 
     def _commit_secrets_file(self):
         data = self._get_tunnels()
-        tunnels = [{'leftid': i['rules']['leftid'],
-                    'rightid': i['rules']['rightid'],
-                    'psk': i['psk']} for i in data]
+        if data:
+            tunnels = [{'leftid': i['rules']['leftid'],
+                        'rightid': i['rules']['rightid'],
+                        'psk': i['psk']} for i in data]
+        else:
+            tunnels = None
         data = render_template(self.secrets_template, tunnels=tunnels)
         try:
             with open(self.secrets_file, 'w') as f:
@@ -112,8 +115,8 @@ class VpnServer(object):
         #: store cmd info
         self.cmd = cmd
         self.c_code = r['return_code']
-        self.c_stdout = r['stdout']
-        self.c_stderr = r['stderr']
+        self.c_stdout = [i for i in r['stdout'].split('\n') if i]
+        self.c_stderr = [i for i in r['stderr'].split('\n') if i]
         #: check return code
         if r['return_code'] == 0:
             return True
@@ -224,8 +227,8 @@ class VpnServer(object):
 def vpn_settings(form, tunnel_id=None):
     tunnel = VpnConfig()
     vpn = VpnServer()
-    rules = {'auto': form.start_type.data, 'esp': form.protocol_type.data,
-             'left': form.local_ip.data, 'leftsubnet': form.local_subnet.data,
+    rules = {'auto': form.start_type.data, 'esp': 'aes256-sha1-modp1024',
+             'left': '0.0.0.0', 'leftsubnet': form.local_subnet.data,
              'leftid': form.tunnel_name.data, 'right': form.remote_ip.data,
              'rightsubnet': form.remote_subnet.data, 'rightid': form.tunnel_name.data,
              'authby': 'secret'}
