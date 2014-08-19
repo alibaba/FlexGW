@@ -54,6 +54,5 @@ file_handler = TimedRotatingFileHandler(website_log,
                                         'W0', 1, backupCount=7)
 file_handler.suffix = '%Y%m%d-%H%M'
 file_handler.setLevel(logging.INFO)
-file_handler.setFormatter(Formatter('%(asctime)s %(levelname)s: %(message)s '
-                                    '[in %(pathname)s:%(lineno)d]'))
+file_handler.setFormatter(Formatter('%(asctime)s %(levelname)s: %(message)s'))
 app.logger.addHandler(file_handler)

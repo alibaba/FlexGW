@@ -6,20 +6,17 @@
     account views:
         /login
         /logout
-        /settings
 
     :copyright: (c) 2014 by xiong.xiaox(xiong.xiaox@alibaba-inc.com).
 """
 
-from flask import Blueprint, render_template, request
-from flask import url_for, session, redirect, json, abort
-from flask import current_app
+from flask import Blueprint, render_template
+from flask import url_for, session, redirect, request
 
 from website.account.models import User
 from website.account.forms import LoginForm
 
 from flask.ext.login import login_required, logout_user, login_user
-from flask.ext.principal import identity_changed, AnonymousIdentity, Identity
 
 
 account = Blueprint('account', __name__,
@@ -30,12 +27,10 @@ account = Blueprint('account', __name__,
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(account=form.account.data).first()
+        user = User.query_filter_by(username=form.account.data)
         login_user(user)
-        identity_changed.send(current_app._get_current_object(),
-                              identity=Identity(user.id))
-        return redirect(url_for('default'))
-    return render_template('login.html', form=form)
+        return redirect(request.args.get("next") or url_for('default'))
+    return render_template('account/login.html', form=form)
 
 
 @account.route('/logout')
@@ -45,13 +40,4 @@ def logout():
     logout_user()
     # Remove session
     session.clear()
-    # Tell Flask-Principal the user is anonymous
-    identity_changed.send(current_app._get_current_object(),
-                          identity=AnonymousIdentity())
     return redirect(url_for("account.login"))
-
-
-@account.route('/account/settings')
-@login_required
-def settings():
-    pass

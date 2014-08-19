@@ -49,7 +49,7 @@
           </ul>
           <ul class="right">
             <li{% if 'docs' in request.endpoint %} class="active" {% endif %}><a href="/docs"><i class="fi-page-doc"> </i>Docs</a></li>
-            <li><a href="/logout"><i class="fi-torso-business"> </i>admin退出</a></li>
+            <li><a href="/logout"><i class="fi-torso-business"> </i>{{ g.account }} 退出</a></li>
           </ul>
         </section>
       </nav>

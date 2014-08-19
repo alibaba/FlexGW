@@ -22,7 +22,12 @@
             {{ form.account.label(class="right inline") }}
           </div>
           <div class="large-9 columns">
+            {% if form.account.errors %}
+            {{ form.account(class="error", value=form.account.value) }}
+            <small class="error">{{ form.account.errors[0] }}</small>
+            {% else %}
             {{ form.account(placeholder="user") }}
+            {% endif %}
           </div>
         </div>
         <div class="row">
@@ -30,7 +35,12 @@
             {{ form.password.label(class="right inline") }}
           </div>
           <div class="large-9 columns">
+            {% if form.password.errors %}
+            {{ form.password(class="error", value=form.password.value) }}
+            <small class="error">{{ form.password.errors[0] }}</small>
+            {% else %}
             {{ form.password(placeholder="password") }}
+            {% endif %}
           </div>
         </div>
         <div class="row">
