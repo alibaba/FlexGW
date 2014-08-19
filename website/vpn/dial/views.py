@@ -61,7 +61,7 @@ def settings():
     settings = Settings.query.get(1)
     if form.validate_on_submit():
         if settings_update(form):
-            flash(u'修改配置成功！', 'success')
+            flash(u'修改配置成功！注：修改「虚拟IP 地址池」之后，需手工调整相应的SNAT 设置！', 'success')
             return redirect(url_for('dial.settings'))
     return render_template('dial/settings.html', settings=settings, form=form)
 
@@ -74,12 +74,12 @@ def id_settings(id):
     if form.validate_on_submit():
         if form.delete.data:
             if account_del(id):
-                message = u'删除隧道%s ：成功！' % account[0]['name']
+                message = u'删除账号%s ：成功！' % account[0]['name']
                 flash(message, 'success')
                 return redirect(url_for('dial.index'))
         if form.save.data:
             if account_update(form, id):
-                flash(u'修改隧道配置成功！', 'success')
+                flash(u'修改账号配置成功！', 'success')
                 return redirect(url_for('dial.id_settings', id=id))
     return render_template('dial/view.html', account=account[0], form=form)
 

@@ -9,6 +9,9 @@
 """
 
 
+from website.services import exec_command
+
+
 def exchange_maskint(mask_int):
     bin_arr = ['0' for i in range(32)]
 
@@ -20,7 +23,24 @@ def exchange_maskint(mask_int):
 
 
 def exchange_mask(mask):
-    count_bit = lambda bin_str: len([i for i in bin_str if i=='1'])
+    count_bit = lambda bin_str: len([i for i in bin_str if i == '1'])
     mask_splited = mask.split('.')
     mask_count = [count_bit(bin(int(i))) for i in mask_splited]
     return sum(mask_count)
+
+
+def get_localhost_ip():
+    cmd = ['/sbin/ifconfig']
+    eth_ip = {}
+    try:
+        r = exec_command(cmd)
+    except:
+        return False
+    if r['return_code'] == 0:
+        r_data = r['stdout'].split('\n')
+        for index, line in enumerate(r_data):
+            if line.startswith('inet addr:'):
+                eth_ip[r_data[index-1].split()[0]] = line.split().split(':')[1]
+    else:
+        return False
+    return eth_ip

@@ -188,6 +188,7 @@ def get_accounts(id=None, status=False):
         return sorted(accounts, key=lambda x: x.get('rip'), reverse=True)
     return None
 
+
 def account_update(form, id=None):
     account = VpnConfig()
     vpn = VpnServer()
@@ -195,12 +196,14 @@ def account_update(form, id=None):
         return True
     return False
 
+
 def account_del(id):
     config = VpnConfig()
     vpn = VpnServer()
     if config.delete(id) and vpn.reload:
         return True
     return False
+
 
 def settings_update(form):
     account = VpnConfig()
