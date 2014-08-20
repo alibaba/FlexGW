@@ -144,8 +144,8 @@ td a {
 }
 
 .pricing-table .title {
-  background: #379F7A;
-  color: #FFF;
+  background: whitesmoke;
+  color: #222;
 }
 
 .pricing-table .description {
@@ -156,6 +156,24 @@ td a {
 
 .pricing-table .cta-button .alert {
   background: #F35F55;
+}
+
+.alert-box.info {
+  background-color: #4DBCE9;
+  border-color: #4DBCE9;
+  color: #FFF;
+}
+
+.alert-box.alert {
+  background-color: #FF4E50;
+  border-color: #FF4E50;
+  color: #FFF;
+}
+
+.alert-box.success {
+  background-color: #00C176;
+  border-color: #00C176;
+  color: #FFF;
 }
 
 
