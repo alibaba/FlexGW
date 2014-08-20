@@ -63,6 +63,8 @@ def settings():
         if settings_update(form):
             flash(u'修改配置成功！注：修改「虚拟IP 地址池」之后，需手工调整相应的SNAT 设置！', 'success')
             return redirect(url_for('dial.settings'))
+    if settings:
+        form.subnet.data = settings.subnet
     return render_template('dial/settings.html', settings=settings, form=form)
 
 

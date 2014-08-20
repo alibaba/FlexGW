@@ -13,7 +13,7 @@
 
 
 from flask_wtf import Form
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length
 
 
@@ -31,8 +31,8 @@ class AddForm(Form):
 class SettingsForm(Form):
     ipool = StringField(u'虚拟IP 地址池',
                         validators=[DataRequired(message=u'这是一个必选项！')])
-    subnet = StringField(u'子网网段',
-                         validators=[DataRequired(message=u'这是一个必选项！')])
+    subnet = TextAreaField(u'子网网段',
+                           validators=[DataRequired(message=u'这是一个必选项！')])
 
 
 class ConsoleForm(Form):

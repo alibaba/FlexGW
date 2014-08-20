@@ -39,9 +39,10 @@ class VpnConfig(object):
         r_ipool, r_subnet = self._get_settings()
         ipool = "%s %s" % (r_ipool.split('/')[0].strip(),
                            exchange_maskint(int(r_ipool.split('/')[1].strip())))
-        subnet = "%s %s" % (r_subnet.split('/')[0].strip(),
-                            exchange_maskint(int(r_subnet.split('/')[1].strip())))
-        data = render_template(self.conf_template, ipool=ipool, subnet=subnet)
+        subnets = ["%s %s" % (i.split('/')[0].strip(),
+                              exchange_maskint(int(i.split('/')[1].strip())))
+                   for i in r_subnet.split(',')]
+        data = render_template(self.conf_template, ipool=ipool, subnets=subnets)
         try:
             with open(self.conf_file, 'w') as f:
                 f.write(data)
@@ -61,6 +62,8 @@ class VpnConfig(object):
         return True
 
     def update_settings(self, ipool, subnet):
+        subnet_list = [i.strip() for i in subnet.split(',')]
+        subnet = ','.join(subnet_list)
         settings = Settings.query.get(1)
         if settings is None:
             settings = Settings(ipool, subnet)

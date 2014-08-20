@@ -46,10 +46,10 @@
           </div>
           <div class="large-5 columns end">
             {% if form.subnet.errors %}
-            {{ form.subnet(class="error", value=form.subnet.value) }}
+            {{ form.subnet(class="error") }}
             <small class="error">{{ form.subnet.errors[0] }}</small>
             {% else %}
-            {{ form.subnet(value=settings.subnet) }}
+            {{ form.subnet }}
             {% endif %}
           </div>
         </div>
