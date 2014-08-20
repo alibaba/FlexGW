@@ -199,8 +199,7 @@ class VpnServer(object):
         if not self.tunnel_status(tunnel_name):
             flash(u'隧道已经断开！', 'info')
             return False
-        #: use self.tunnel_status() return stdout[-1] to get tunnel real name
-        cmd = ['strongswan', 'down', self.c_stdout[-1].split(':')[0].strip()]
+        cmd = ['strongswan', 'down', tunnel_name]
         message = u"隧道停止失败：%s"
         return self._tunnel_exec(cmd, message)
 

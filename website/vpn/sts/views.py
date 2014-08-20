@@ -96,7 +96,7 @@ def console():
     return render_template('sts/console.html', status=vpn.status, form=form)
 
 
-@sts.route('updown', methods=['POST'])
+@sts.route('/updown', methods=['POST'])
 @login_required
 def updown():
     form = UpDownForm()
