@@ -86,6 +86,7 @@ class VpnConfig(object):
 class VpnServer(object):
     """vpn server console"""
     log_file = '/etc/openvpn/openvpn-status.log'
+    pid_file = '/var/run/openvpn/server.pid'
 
     def __init__(self):
         self.cmd = None
@@ -122,12 +123,18 @@ class VpnServer(object):
 
     @property
     def start(self):
+        if self.status:
+            flash(u'服务已经启动！', 'info')
+            return False
         cmd = ['service', 'openvpn', 'start']
         message = u"VPN 服务启动失败：%s"
         return self._exec(cmd, message)
 
     @property
     def stop(self):
+        if not self.status:
+            flash(u'服务已经停止！', 'info')
+            return False
         cmd = ['service', 'openvpn', 'stop']
         message = u"VPN 服务停止失败：%s"
         return self._exec(cmd, message)
@@ -145,10 +152,20 @@ class VpnServer(object):
 
     @property
     def status(self):
-        cmd = ['service', 'openvpn', 'status']
+        try:
+            with open(self.pid_file) as f:
+                raw_data = f.readlines()
+        except:
+            return False
+        if not raw_data:
+            return False
+        pid = int(raw_data[0])
+        cmd = ['kill', '-0', str(pid)]
         return self._exec(cmd)
 
     def account_status(self, account_name):
+        if not self.status:
+            return False
         try:
             with open(self.log_file) as f:
                 raw_data = f.readlines()
