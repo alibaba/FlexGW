@@ -212,7 +212,7 @@ def get_accounts(id=None, status=False):
 def account_update(form, id=None):
     account = VpnConfig()
     vpn = VpnServer()
-    if account.update_account(id, form.name.data, form.password.data) and vpn.reload:
+    if account.update_account(id, form.name.data, form.password.data):
         return True
     return False
 
