@@ -18,7 +18,7 @@ def exec_command(cmd):
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
     # settings exec timeout
-    timer = Timer(5, proc.kill, [proc])
+    timer = Timer(5, proc.kill)
     timer.start()
     stdout, stderr = proc.communicate()
     timer.cancel()
