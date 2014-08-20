@@ -16,8 +16,8 @@ from wtforms.validators import Required, IPAddress
 
 
 class SnatForm(Form):
-    source = TextField('source',
+    source = TextField(u'SNAT源IP（段）',
                        validators=[Required(message=u'这是一个必选项！')])
-    gateway = TextField('gateway',
+    gateway = TextField(u'SNAT转发IP',
                         validators=[Required(message=u'这是一个必选项！'),
                                     IPAddress(message=u'无效的ip 地址！')])
