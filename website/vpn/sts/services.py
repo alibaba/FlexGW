@@ -232,10 +232,12 @@ class VpnServer(object):
 def vpn_settings(form, tunnel_id=None):
     tunnel = VpnConfig()
     vpn = VpnServer()
+    local_subnet = ','.join([ i.strip() for i in form.local_subnet.data.split(',')])
+    remote_subnet = ','.join([ i.strip() for i in form.remote_subnet.data.split(',')])
     rules = {'auto': form.start_type.data, 'esp': 'aes256-sha1-modp1024',
-             'left': '0.0.0.0', 'leftsubnet': form.local_subnet.data,
+             'left': '0.0.0.0', 'leftsubnet': local_subnet,
              'leftid': form.tunnel_name.data, 'right': form.remote_ip.data,
-             'rightsubnet': form.remote_subnet.data, 'rightid': form.tunnel_name.data,
+             'rightsubnet': remote_subnet, 'rightid': form.tunnel_name.data,
              'authby': 'secret'}
     if tunnel.update_tunnel(tunnel_id, form.tunnel_name.data, json.dumps(rules),
                             form.psk.data) and vpn.reload:

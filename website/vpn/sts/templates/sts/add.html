@@ -22,6 +22,9 @@
       {% endfor %}
       {% endif %}
       {% endwith %}
+      <div data-alert class="alert-box info">
+        隧道ID：互相连接的隧道两端ID 需要保持一致。本端/对端子网：可以填写多个子网，用英文「,」分割。</li>
+      </div>
       <form method="POST" action="{{ url_for('sts.add') }}">
         <div class="row">
           <div class="large-3 columns">
@@ -50,10 +53,10 @@
           </div>
           <div class="large-5 columns end">
             {% if form.local_subnet.errors %}
-            {{ form.local_subnet(class="error", value=form.local_subnet.value) }}
+            {{ form.local_subnet(class="error") }}
             <small class="error">{{ form.local_subnet.errors[0] }}</small>
             {% else %}
-            {{ form.local_subnet(placeholder="10.1.0.0/16") }}
+            {{ form.local_subnet(placeholder="10.1.0.0/24, 10.1.1.0/24") }}
             {% endif %}
           </div>
         </div>
@@ -76,10 +79,10 @@
           </div>
           <div class="large-5 columns end">
             {% if form.remote_subnet.errors %}
-            {{ form.remote_subnet(class="error", value=form.remote_subnet.value) }}
+            {{ form.remote_subnet(class="error") }}
             <small class="error">{{ form.remote_subnet.errors[0] }}</small>
             {% else %}
-            {{ form.remote_subnet(placeholder="10.2.0.0/16") }}
+            {{ form.remote_subnet(placeholder="10.2.0.0/24, 10.2.1.0/24") }}
             {% endif %}
           </div>
         </div>

@@ -16,7 +16,7 @@
     <div class="large-2 columns">
       <span class="label">隧道信息</span>
       <ul class="square">
-        <li>隧道名：{{ tunnel.name }}</li>
+        <li>隧道ID：{{ tunnel.name }}</li>
         <li>状态：
           {% if tunnel.status %}
           <span class="success label">Online</span>
@@ -24,9 +24,9 @@
           <span class="secondary label">Offline</span>
           {% endif %}
         </li>
-        <li>本端私网：{{ tunnel.rules.leftsubnet }}</li>
+        <li>本端子网：{{ tunnel.rules.leftsubnet }}</li>
         <li>对端EIP：{{ tunnel.rules.right }}</li>
-        <li>对端私网：{{ tunnel.rules.rightsubnet }}</li>
+        <li>对端子网：{{ tunnel.rules.rightsubnet }}</li>
       </ul>
     </div>
     <!-- end of side nav -->
