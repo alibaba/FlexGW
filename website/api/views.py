@@ -26,7 +26,7 @@ api = Blueprint('api', __name__, url_prefix='/api')
 @login_required
 def vpn_traffic(tunnel_name):
     vpn = VpnServer()
-    return jsonify(vpn.tunnel_traffic(tunnel_name))
+    return jsonify(vpn.tunnel_traffic(tunnel_name) or [])
 
 
 @api.route('/vpn/<tunnel_name>/up')

@@ -213,8 +213,13 @@ class VpnServer(object):
         cmd = ['strongswan', 'statusall', tunnel_name]
         rx_pkts = 0
         tx_pkts = 0
+        raw_data = None
         if self._exec(cmd):
-            raw_data = self.c_stdout[-2].replace(',', '').split()
+            for line in self.c_stdout:
+                if 'bytes_i' in line:
+                    raw_data = line.replace(',', '').split()
+            if not raw_data:
+                return False
             if raw_data[raw_data.index('bytes_i')+1].startswith('('):
                 #: check Timestamp > 2s, then drop.
                 if int(raw_data[raw_data.index('bytes_i')+3].strip('s')) < 2:
