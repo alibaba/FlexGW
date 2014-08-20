@@ -153,12 +153,18 @@ class VpnServer(object):
 
     @property
     def start(self):
+        if self.status:
+            flash(u'服务已经启动！', 'info')
+            return False
         cmd = ['strongswan', 'start']
         message = u"VPN 服务启动失败：%s"
         return self._exec(cmd, message)
 
     @property
     def stop(self):
+        if not self.status:
+            flash(u'服务已经停止！', 'info')
+            return False
         cmd = ['strongswan', 'stop']
         message = u"VPN 服务停止失败：%s"
         return self._exec(cmd, message)
