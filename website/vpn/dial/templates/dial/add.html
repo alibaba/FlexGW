@@ -22,6 +22,9 @@
       {% endfor %}
       {% endif %}
       {% endwith %}
+      <div data-alert class="alert-box info">
+        注意：「账号名」只可包含如下字符：数字、字母、下划线。
+      </div>
       <form method="POST" action="{{ url_for('dial.add') }}">
         <div class="row">
           <div class="large-3 columns">

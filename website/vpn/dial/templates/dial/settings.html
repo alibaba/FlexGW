@@ -22,8 +22,8 @@
       {% endfor %}
       {% endif %}
       {% endwith %}
-      <div data-alert class="alert-box">
-        Virtual IP Pool: 为VPN Server 分配给客户端的虚拟IP 地址池。
+      <div data-alert class="alert-box info">
+        虚拟IP 地址池: 为VPN Server 分配给客户端的虚拟IP 地址池。子网网段：可以填写多个子网，用英文「,」分割。
       </div>
       <form method="POST" action="{{ url_for('dial.settings') }}">
         <div class="row">
@@ -35,7 +35,7 @@
             {{ form.ipool(class="error", value=form.ipool.value) }}
             <small class="error">{{ form.ipool.errors[0] }}</small>
             {% else %}
-            {{ form.ipool(value=settings.ipool) }}
+            {{ form.ipool(placeholder="10.8.8.0/24", value=settings.ipool) }}
             {% endif %}
           </div>
         </div>
@@ -49,7 +49,7 @@
             {{ form.subnet(class="error") }}
             <small class="error">{{ form.subnet.errors[0] }}</small>
             {% else %}
-            {{ form.subnet }}
+            {{ form.subnet(placeholder="10.1.0.0/24, 10.1.1.0/24") }}
             {% endif %}
           </div>
         </div>
