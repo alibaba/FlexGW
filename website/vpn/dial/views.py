@@ -41,6 +41,10 @@ def index():
 @dial.route('/add', methods=['GET', 'POST'])
 @login_required
 def add():
+    settings = Settings.query.get(1)
+    if not settings:
+        flash(u'提示：请先进行「设置」再添加VPN 账号。', 'alert')
+        return redirect(url_for('dial.settings'))
     form = AddForm()
     if form.validate_on_submit():
         if not Account.query.filter_by(name=form.name.data).first():

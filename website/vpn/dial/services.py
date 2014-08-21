@@ -105,7 +105,7 @@ class VpnServer(object):
         try:
             r = exec_command(cmd)
         except:
-            flash(u'VpnServer 程序异常，无法调用，请排查操作系统相关设置！', 'alert')
+            flash(u'VPN 程序异常，无法调用，请排查操作系统相关设置！', 'alert')
             return False
         #: store cmd info
         self.cmd = cmd
@@ -121,7 +121,7 @@ class VpnServer(object):
 
     def _reload_conf(self):
         cmd = ['service', 'openvpn', 'reload']
-        message = u"VPN 服务配置文件加载失败：%s"
+        message = u"VPN 服务重载失败！%s"
         return self._exec(cmd, message)
 
     @property
@@ -130,7 +130,7 @@ class VpnServer(object):
             flash(u'服务已经启动！', 'info')
             return False
         cmd = ['service', 'openvpn', 'start']
-        message = u"VPN 服务启动失败：%s"
+        message = u"VPN 服务启动失败！%s"
         return self._exec(cmd, message)
 
     @property
@@ -139,15 +139,18 @@ class VpnServer(object):
             flash(u'服务已经停止！', 'info')
             return False
         cmd = ['service', 'openvpn', 'stop']
-        message = u"VPN 服务停止失败：%s"
+        message = u"VPN 服务停止失败！%s"
         return self._exec(cmd, message)
 
     @property
     def reload(self):
         tunnel = VpnConfig()
         if not tunnel.commit():
-            message = u'VPN 服务配置文件下发失败。'
+            message = u'VPN 服务配置文件修改失败，请重试！'
             flash(message, 'alert')
+            return False
+        if not self.status:
+            flash(u'设置成功！VPN 服务未启动，请通过「VPN服务管理」启动VPN 服务。', 'alert')
             return False
         if self._reload_conf():
             return True
@@ -211,7 +214,6 @@ def get_accounts(id=None, status=False):
 
 def account_update(form, id=None):
     account = VpnConfig()
-    vpn = VpnServer()
     if account.update_account(id, form.name.data, form.password.data):
         return True
     return False
