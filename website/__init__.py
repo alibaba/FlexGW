@@ -24,9 +24,6 @@ from flask.ext.login import LoginManager
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-from flask.ext.principal import Principal
-Principal(app)
-
 from flask_wtf.csrf import CsrfProtect
 CsrfProtect(app)
 
