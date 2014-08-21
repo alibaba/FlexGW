@@ -5,10 +5,10 @@
 *.swp
 *.log
 *.pid
-logs/
+logs/*
 !logs/.gitkeep
 
 # some private files
 artwork/
-instance/
+instance/*
 !instance/application.cfg
