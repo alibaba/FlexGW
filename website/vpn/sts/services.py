@@ -276,5 +276,5 @@ def get_tunnels(id=None, status=False):
             vpn = VpnServer()
             for tunnel in tunnels:
                 tunnel['status'] = vpn.tunnel_status(tunnel['name'])
-        return tunnels
+        return sorted(tunnels, key=lambda x: x.get('status'), reverse=True)
     return None
