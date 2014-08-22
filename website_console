@@ -1,6 +1,7 @@
 #!/bin/bash
 #########################################################################
-# File Name: this is script can start/stop/restart website
+# chkconfig: - 96 48
+# description: this is script can start/stop/restart website
 #########################################################################
 
 

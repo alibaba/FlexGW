@@ -10,7 +10,7 @@ Source0:   %{name}-%{version}.tar.bz2
 Source1:   pyenv.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
-AutoReq: no
+AutoReqProv: no
 
 %define __os_install_post    \
     /usr/lib/rpm/redhat/brp-compress \
@@ -42,9 +42,11 @@ echo "building pyenv"
 %{pyenv_build_dir}/pyenv/versions/%{py_version}/bin/pip install -r %{_builddir}/%{name}-%{version}/requirements.txt
 
 %install
+mkdir -p %{buildroot}/etc/init.d/
 mkdir -p %{buildroot}/usr/local/ecs-vpn/
 mkdir -p %{buildroot}/usr/local/ecs-vpn/pyenv/
 
+cp -fv %{_builddir}/%{name}-%{version}/website_console %{buildroot}/etc/init.d/ecsvpn
 cp -rv %{_builddir}/%{name}-%{version}/* %{buildroot}/usr/local/ecs-vpn/
 cp -rv %{pyenv_build_dir}/pyenv/* %{buildroot}/usr/local/ecs-vpn/pyenv/
 
@@ -56,9 +58,11 @@ rm -rf %{pyenv_build_dir}
 
 %files
 %defattr(-,root,root)
+/etc/init.d/*
 /usr/local/ecs-vpn/*
 %attr(0755,root,root) /usr/local/ecs-vpn/scripts/*
-%config(noreplace) /usr/local/ecs-vpn/websiteconfig.py
+%exclude /usr/local/ecs-vpn/packaging
+%config(noreplace) /usr/local/ecs-vpn/instance/website.db
 #%doc README.md ChangeLog.md
 
 
