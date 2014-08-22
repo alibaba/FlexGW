@@ -16,7 +16,7 @@ import sys
 import sqlite3
 
 
-DATABASE = '%s/instance/vpn_website.db' % os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
+DATABASE = '%s/instance/website.db' % os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
 
 
 def __query_db(query, args=(), one=False):

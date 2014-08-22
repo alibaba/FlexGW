@@ -10,5 +10,3 @@ logs/*
 
 # some private files
 artwork/
-instance/*
-!instance/application.cfg
