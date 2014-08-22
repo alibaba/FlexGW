@@ -18,4 +18,4 @@ class default_settings(object):
     SECRET_KEY = '\x7f\x89q\x87v~\x87~\x86U\xb1\xa8\xb5=v\xaf\xb0\xdcn\xfa\xea\xeb?\x99'
 
     SQLALCHEMY_ECHO = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///{0}/instance/vpn_website.db'.format(os.getcwd())
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///%s/instance/vpn_website.db' % os.path.abspath(os.path.dirname(__file__))

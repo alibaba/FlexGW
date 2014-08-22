@@ -1,3 +1,4 @@
+#!/usr/local/ecs-vpn/pyenv/versions/2.7.6/bin/python
 # -*- coding: utf-8 -*-
 """
     openvpn-auth
@@ -15,7 +16,7 @@ import sys
 import sqlite3
 
 
-DATABASE = ''
+DATABASE = '%s/instance/vpn_website.db' % os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
 
 
 def __query_db(query, args=(), one=False):
