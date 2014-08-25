@@ -43,12 +43,12 @@
         <section class="top-bar-section">
           <!-- Right Nav Section -->
           <ul class="left">
-            <li{% if 'sts' in request.endpoint %} class="active" {% endif %}><a href="/vpn/sts/">IPSec VPN</a></li>
-            <li{% if 'dial' in request.endpoint %} class="active" {% endif %}><a href="/vpn/dial/">拨号 VPN</a></li>
-            <li{% if 'snat' in request.endpoint %} class="active" {% endif %}><a href="/snat">SNAT</a></li>
+            <li{% if 'sts.' in request.endpoint %} class="active" {% endif %}><a href="/vpn/sts/">IPSec VPN</a></li>
+            <li{% if 'dial.' in request.endpoint %} class="active" {% endif %}><a href="/vpn/dial/">拨号 VPN</a></li>
+            <li{% if 'snat.' in request.endpoint %} class="active" {% endif %}><a href="/snat">SNAT</a></li>
           </ul>
           <ul class="right">
-            <li{% if 'docs' in request.endpoint %} class="active" {% endif %}><a href="/docs"><i class="fi-page-doc"> </i>Docs</a></li>
+            <li{% if 'docs.' in request.endpoint %} class="active" {% endif %}><a href="/docs"><i class="fi-page-doc"> </i>文档</a></li>
             <li><a href="/logout"><i class="fi-torso-business"> </i>{{ g.account }} 退出</a></li>
           </ul>
         </section>
