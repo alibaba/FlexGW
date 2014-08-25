@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block title %}Docs{% endblock %}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li>Docs</li>
+        <li class="current"><a href="{{ url_for('docs.ipsec') }}">IPSec VPN</a></li>
+{% endblock trail %}
+
+{% block content %}
+    {% include "docs/sidenav.html" %}
+
+    <!-- start of issue table -->
+    <div class="large-10 columns">
+      <div class="row">
+        <div class="large-12 columns">
+          <div class="panel">
+            <h3>IPSec Site-to-Site VPN 使用指南</h3>
+            <hr />
+            <img src="{{ url_for('docs.static', filename='img/ipsec_01.png') }}">
+            <p>如上图所示，VPC1私网为：172.16.0.0/24，VPC2私网为：192.168.0.0/24。其中，两个VPC 中各有一台使用VPN/SNAT镜像安装的GateWay VM，并绑定了EIP。<br />
+            现在想让两个VPC 的私网VM之间 能够相互访问，我们将需要在VPC1 GateWay VM 和VPC2 GateWay VM 之间建立一条IPSec Site-to-Site隧道。<br/>
+            本例：从VPC1 的172.16.0.3 访问VPC2 的192.168.0.3 。</p>
+            <h5>第一、启动IPSec VPN 服务</h5>
+            <hr />
+            <p>进入IPSec 「VPN 服务管理」页面，确保VPC 两端的GateWay VM1、GateWay VM2 均启动了IPSec VPN 服务。</p>
+            <img src="{{ url_for('docs.static', filename='img/ipsec_02.png') }}">
+            <ul>
+              <li>启动VPN 服务：仅启动本机的IPSec VPN。启动时，启动类型为「自动连接」的隧道将自动尝试连接对端VPN。</li>
+              <li>停止VPN 服务：停止本机的IPSec VPN。已经连接上的隧道将全部断开。</li>
+              <li>配置下发&amp;重载：一般情况下，该动作在新增、修改或删除隧道时会自动进行。但某些情况下，如果你想重新生成VPN 配置，可手动执行该操作。</li>
+            </ul>
+            <h5>第二、新增隧道</h5>
+            <hr />
+            <h6>VPC1 GateWay VM:</h6>
+            <img src="{{ url_for('docs.static', filename='img/ipsec_03_01.png') }}">
+            <h6>VPC2 GateWay VM:</h6>
+            <img src="{{ url_for('docs.static', filename='img/ipsec_03_02.png') }}">
+            <ul>
+              <li>两边的<strong>隧道ID、预共享密钥必须一致</strong>才能建立连接。</li>
+              <li>本端子网、对端子网：即前面例子中的192.168.0.0/24，172.16.0.0/24。</li>
+              <li>对端EIP：对端GateWay 所绑定的EIP。</li>
+            </ul>
+            <h5>第三、查看隧道列表</h5>
+            <hr />
+            <p>在VPC1和VPC2 的GateWay VM 上将隧道添加完毕之后，进入「隧道列表」页面。对我们刚刚配置好的隧道，点击「连接」，即可看到：</p>
+            <img src="{{ url_for('docs.static', filename='img/ipsec_04.png') }}">
+            <ul>
+              <li>连接：连接隧道。在两台GateWay VM任意一端操作即可。</li>
+              <li>断开：断开隧道。在两台GateWay VM任意一端操作即可。</li>
+            </ul>
+            <h5>第四、查看隧道实时流量</h5>
+            <hr />
+            <p>点击上图的「流量」按钮，即可看到隧道的实时流量：</p>
+            <img src="{{ url_for('docs.static', filename='img/ipsec_05.png') }}">
+            <ul>
+              <li>颜色：代表in、out 方向的流量。</li>
+              <li>单位：Bytes。</li>
+            </ul>
+            <h5>第五、修改或删除隧道</h5>
+            <hr />
+            <p>点击对应的隧道ID 进入修改、删除页面：</p>
+            <img src="{{ url_for('docs.static', filename='img/ipsec_06.png') }}">
+            <ul>
+              <li>保存：修改后，点击保存，配置将立即生效，但不会影响已经连接上的隧道。需要手工断开、再连接隧道。</li>
+              <li>删除：点击删除，将该隧道删除，同时会自动断开该隧道，立即生效。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of issue table -->
+{% endblock content %}

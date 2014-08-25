@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block title %}Docs{% endblock %}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li>Docs</li>
+        <li class="current"><a href="{{ url_for('docs.certificate') }}">关于VPN 证书</a></li>
+{% endblock trail %}
+
+{% block content %}
+    {% include "docs/sidenav.html" %}
+
+    <!-- start of issue table -->
+    <div class="large-10 columns">
+      <div class="row">
+        <div class="large-12 columns">
+          <div class="panel">
+            <h3>关于VPN 证书</h3>
+            <hr />
+            <p>IPSec Site-to-Site VPN 采用的时PSK 方式加密连接，并使用证书认证。</p>
+            <p>拨号VPN 使用了证书。考虑到证书的唯一性、安全性，我们的证书文件是VM 第一次启动时，通过脚本自动生成的，与OpenVPN 配置文件server.conf 一起放在/etc/openvpn 下。</p>
+            <h5>其中：</h5>
+            <ol>
+              <li>ca.crt：是根证书，服务器和客户端都需要保存。</li>
+              <li>server.crt：是服务器的证书，由CA 证书进行签名。</li>
+              <li>server.key：是服务器的证书对应秘钥。</li>
+              <li>dh1024.pem：DH 算法参数文件。</li>
+            </ol>
+            <h3>使用自己的证书</h3>
+            <hr />
+            <p>如果你希望使用自己的证书，可以使用openssl命令生成自己的根证书、服务器证书、以及DH算法参数文件，将其放在/etc/openvpn 下替换掉相应的证书文件即可。<br />
+            同时，客户端也要使用新的CA 证书来替换掉原来的根证书。<br />
+            最后，还需要通过「VPN 服务管理」页面重启一下拨号VPN 服务。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of issue table -->
+{% endblock content %}
