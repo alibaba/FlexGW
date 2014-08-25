@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %}Docs{% endblock %}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li>Docs</li>
+        <li class="current"><a href="{{ url_for('docs.debug') }}">问题排查</a></li>
+{% endblock trail %}
+
+{% block content %}
+    {% include "docs/sidenav.html" %}
+
+    <!-- start of issue table -->
+    <div class="large-10 columns">
+      <div class="row">
+        <div class="large-12 columns">
+          <div class="panel">
+            <h3>问题排查指南</h3>
+            <hr />
+            <h4>IPSec Site-to-Site 隧道：</h4>
+            <dl>
+              <dt>1、隧道建立后无法连接？</dt>
+              <dd>请检查两端隧道ID和共享秘钥是否相同。<br />
+                  请检查对端EIP是否有误。<br />
+                  请尝试重新启动VPN服务。
+              </dd>
+              <dt>2、隧道连接成功，但是两端子网无法相互访问？</dt>
+              <dd>请检查是否已将子网的流量路由到了VPN VM 上。<br />
+                  请检查配置中对端子网是否有误。 <br />
+                  请尝试重新启动VPN服务。
+              </dd>
+            </dl>
+            <h4>拨号VPN：</h4>
+            <dl>
+              <dt>1、客户接连接超时，请按以下步骤依次检查尝试排除：</dt>
+              <dd>请检查配置文件服务器地址是否有误。<br />
+                  请检查服务是否开启。<br />
+                  请检查客户端是否使用正确的根证书（ca.crt）。<br />
+                  请确认是否更改过服务器证书文件或配置。<br />
+                  请检查客户端是否有防火墙过滤。<br />
+                  请尝试重新启动拨号VPN服务。
+              </dd>
+              <dt>2、客户端连接失败，提示‘AUTH_FAILED’？</dt>
+              <dd>请检查输入账号密码是否正确。<br />
+                  请检查服务器是否已经添加账号密码。<br />
+                  请尝试重新启动拨号VPN服务。
+              </dd>
+              <dt>3、客户端已连接上，但是无法访问内网VM？</dt>
+              <dd>请尝试PING服务器虚拟IP（如10.8.0.1）。<br />
+                  请检查是否正确开启SNAT。<br />
+                  请尝试重新启动拨号VPN服务。
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of issue table -->
+{% endblock content %}
