@@ -46,7 +46,7 @@ mkdir -p %{buildroot}/etc/init.d/
 mkdir -p %{buildroot}/usr/local/ecs-vpn/
 mkdir -p %{buildroot}/usr/local/ecs-vpn/pyenv/
 
-cp -fv %{_builddir}/%{name}-%{version}/scripts/initecsvpn %{buildroot}/etc/init.d/initecsvpn
+mv -fv %{_builddir}/%{name}-%{version}/scripts/initecsvpn %{buildroot}/etc/init.d/initecsvpn
 cp -fv %{_builddir}/%{name}-%{version}/website_console %{buildroot}/etc/init.d/ecsvpn
 cp -rv %{_builddir}/%{name}-%{version}/* %{buildroot}/usr/local/ecs-vpn/
 cp -rv %{pyenv_build_dir}/pyenv/* %{buildroot}/usr/local/ecs-vpn/pyenv/
@@ -63,7 +63,7 @@ rm -rf %{pyenv_build_dir}
 %attr(0755,root,root) /etc/init.d/*
 %attr(0755,root,root) /usr/local/ecs-vpn/scripts/*
 %exclude /usr/local/ecs-vpn/packaging
-%config(noreplace) /usr/local/ecs-vpn/instance/website.db
+%config(noreplace) /usr/local/ecs-vpn/instance/*
 
 %changelog
 
