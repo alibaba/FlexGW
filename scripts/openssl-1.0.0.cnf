@@ -209,7 +209,7 @@ keyUsage = digitalSignature
 # JY ADDED -- Make a cert with nsCertType set to "server"
 basicConstraints=CA:FALSE
 nsCertType                     = server
-nsComment                      = "Easy-RSA Generated Server Certificate"
+nsComment                      = "Flex GateWay Server Certificate"
 subjectKeyIdentifier=hash
 authorityKeyIdentifier=keyid,issuer:always
 extendedKeyUsage=serverAuth

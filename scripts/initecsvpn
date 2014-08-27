@@ -6,6 +6,7 @@ function doit {
     ./cert-build
     cd /usr/local/ecs-vpn/scripts/keys
     cp -fv ca.crt server.crt server.key dh1024.pem /etc/openvpn/
+    cp -fv ca.crt server.crt server.key /usr/local/ecs-vpn/instance/
     # packaging openvpn client config files.
     cd /usr/local/ecs-vpn/website/vpn/dial/static
     zip -qj windows-openvpn-client.zip /etc/openvpn/ca.crt /usr/local/ecs-vpn/rc/openvpn-client.ovpn
