@@ -64,8 +64,6 @@ rm -rf %{pyenv_build_dir}
 %attr(0755,root,root) /usr/local/ecs-vpn/scripts/*
 %exclude /usr/local/ecs-vpn/packaging
 %config(noreplace) /usr/local/ecs-vpn/instance/website.db
-%doc README.md ChangeLog.md
-
 
 %changelog
 

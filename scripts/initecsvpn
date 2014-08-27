@@ -10,5 +10,5 @@ function doit {
     tar -czvf linux-openvpn-client.tar.gz -C /etc/openvpn ca.crt -C /home/xiong.xiaox/ecs-vpn/rc openvpn-client.conf
 }
 
-doit &
+doit 1>/dev/null 2>&1 &
 rm -rf /etc/rc3.d/S98initecsvpn
