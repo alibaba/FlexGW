@@ -3,8 +3,11 @@
 function doit {
     cd /usr/local/ecs-vpn/scripts
     ./cert-build
-    cd keys
+    cd /usr/local/ecs-vpn/scripts/keys
     cp -fv ca.crt server.crt server.key dh1024.pem /etc/openvpn/
+    cd /usr/local/ecs-vpn/website/vpn/dial/static
+    zip -qj windows-openvpn-client.zip /etc/openvpn/ca.crt /usr/local/ecs-vpn/rc/openvpn-client.ovpn
+    tar -czvf linux-openvpn-client.tar.gz -C /etc/openvpn ca.crt -C /home/xiong.xiaox/ecs-vpn/rc openvpn-client.conf
 }
 
 doit &
