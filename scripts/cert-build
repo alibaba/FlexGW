@@ -29,13 +29,13 @@ export KEY_EXPIRE=3650
 export KEY_COUNTRY="CN"
 export KEY_PROVINCE="ZJ"
 export KEY_CITY="HZ"
-export KEY_ORG="Alibaba"
+export KEY_ORG="Flex GateWay"
 export KEY_EMAIL="me@myhost.mydomain"
-export KEY_OU="TP"
+export KEY_OU="Flex GateWay"
 
 # X509 Subject Field
-export KEY_NAME="ECS VPN"
-export KEY_CN='ALI CA'
+export KEY_NAME="Flex GateWay"
+export KEY_CN='Flex GateWay CA'
 
 
 #
@@ -69,7 +69,7 @@ $OPENSSL dhparam -out ${KEY_DIR}/dh${KEY_SIZE}.pem ${KEY_SIZE}
 #create server certificate
 #
 
-export KEY_CN='server'
+export KEY_CN="$(hostname)"
 
 
 $OPENSSL req -batch -nodes -new -newkey rsa:$KEY_SIZE -keyout server.key -out server.csr -extensions server -config "$KEY_CONFIG"
