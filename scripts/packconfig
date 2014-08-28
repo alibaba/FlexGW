@@ -1,0 +1,55 @@
+#!/bin/env bash
+#
+# use to pack openvpn client config files.
+#
+
+
+static_dir="/usr/local/flexgw/website/vpn/dial/static"
+
+usage()
+{
+    echo "Usage: ${0##.*/} <all|windows|linux>"
+    exit 1
+}
+
+pack_openvpn_linux_conf_file()
+{
+    tar -czvf linux-openvpn-client.tar.gz -C /etc/openvpn ca.crt -C /usr/local/flexgw/rc openvpn-client.conf
+    if (( $? != 0)); then
+        echo "packconfig: pack openvpn linux conf file failed."
+        return 1
+    fi
+    echo "packconfig: linux config files pack ok."
+}
+
+pack_openvpn_windows_conf_file()
+{
+    zip -qj windows-openvpn-client.zip /etc/openvpn/ca.crt /usr/local/flexgw/rc/openvpn-client.ovpn
+    if (( $? != 0)); then
+        echo "packconfig: pack openvpn windows conf file failed."
+        return 1
+    fi
+    echo "packconfig: windows config files pack ok."
+}
+
+cd "$static_dir" 2>/dev/null || {
+    echo "packconfig: cannot change working directory to \`$static_dir'"
+    exit 1
+} >&2
+
+command="$1"
+case "$command" in
+"" | "-h" | "--help" )
+    usage >&2
+    ;;
+"windows" )
+    pack_openvpn_windows_conf_file
+    ;;
+"linux" )
+    pack_openvpn_linux_conf_file
+    ;;
+"all" )
+    pack_openvpn_windows_conf_file
+    pack_openvpn_linux_conf_file
+esac
+exit $?
