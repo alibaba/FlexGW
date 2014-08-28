@@ -1,4 +1,4 @@
-#!/usr/local/ecs-vpn/pyenv/versions/2.7.6/bin/python
+#!/usr/local/flexgw/pyenv/versions/2.7.6/bin/python
 # -*- coding: utf-8 -*-
 """
     initdb

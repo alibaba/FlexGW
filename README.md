@@ -1,5 +1,5 @@
-ECS VPN/NAT Image
-=================
+Flex GateWay
+============
 
 介绍
 -------
@@ -30,11 +30,11 @@ OpenVPN
 
 ECS VPN（即本程序）
 
-* 目录：/usr/local/ecs-vpn
-* 数据库文件：/usr/local/ecs-vpn/instance/website.db
-* 日志文件：/usr/local/ecs-vpn/logs/website.log
-* 启动脚本：/etc/init.d/ecsvpn 或/usr/local/ecs-vpn/website_console
-* 实用脚本：/usr/local/ecs-vpn/scripts
+* 目录：/usr/local/flexgw
+* 数据库文件：/usr/local/flexgw/instance/website.db
+* 日志文件：/usr/local/flexgw/logs/website.log
+* 启动脚本：/etc/init.d/flexgw 或/usr/local/flexgw/website_console
+* 实用脚本：/usr/local/flexgw/scripts
 
 「数据库文件」保存了我们所有的VPN 配置，建议定期备份。如果数据库损坏，可通过「实用脚本」目录下的initdb.py 脚本对数据库进行初始化，初始化之后所有的配置将清空。
 
@@ -44,9 +44,9 @@ Strongswan
 * 日志文件：/var/log/strongswan.charon.log
 * 启动脚本：/usr/sbin/strongswan
 
-如果strongswan.conf 配置文件损坏，可使用备份文件/usr/local/ecs-vpn/rc/strongswan.conf 进行覆盖恢复。
+如果strongswan.conf 配置文件损坏，可使用备份文件/usr/local/flexgw/rc/strongswan.conf 进行覆盖恢复。
 
-ipsec.conf 和ipsec.secrets 配置文件，由/usr/local/ecs-vpn/website/vpn/sts/templates/sts 目录下的同名文件自动生成，请勿随便修改。
+ipsec.conf 和ipsec.secrets 配置文件，由/usr/local/flexgw/website/vpn/sts/templates/sts 目录下的同名文件自动生成，请勿随便修改。
 
 OpenVPN
 
@@ -55,4 +55,4 @@ OpenVPN
 * 状态文件：/etc/openvpn/openvpn-status.log
 * 启动脚本：/etc/init.d/openvpn
 
-server.conf 配置文件，由/usr/local/ecs-vpn/website/vpn/dial/templates/dial 目录下的同名文件自动生成，请勿随便修改。
+server.conf 配置文件，由/usr/local/flexgw/website/vpn/dial/templates/dial 目录下的同名文件自动生成，请勿随便修改。

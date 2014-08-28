@@ -22,7 +22,7 @@ AutoReqProv: no
 
 %description
 
-a vpn, snat web for ecs.
+a vpn, snat web for ecs vpc vm.
 
 %prep
 %setup -q -b 0
@@ -43,13 +43,13 @@ echo "building pyenv"
 
 %install
 mkdir -p %{buildroot}/etc/init.d/
-mkdir -p %{buildroot}/usr/local/ecs-vpn/
-mkdir -p %{buildroot}/usr/local/ecs-vpn/pyenv/
+mkdir -p %{buildroot}/usr/local/flexgw/
+mkdir -p %{buildroot}/usr/local/flexgw/pyenv/
 
-mv -fv %{_builddir}/%{name}-%{version}/scripts/initecsvpn %{buildroot}/etc/init.d/initecsvpn
-cp -fv %{_builddir}/%{name}-%{version}/website_console %{buildroot}/etc/init.d/ecsvpn
-cp -rv %{_builddir}/%{name}-%{version}/* %{buildroot}/usr/local/ecs-vpn/
-cp -rv %{pyenv_build_dir}/pyenv/* %{buildroot}/usr/local/ecs-vpn/pyenv/
+mv -fv %{_builddir}/%{name}-%{version}/scripts/initflexgw %{buildroot}/etc/init.d/initflexgw
+cp -fv %{_builddir}/%{name}-%{version}/website_console %{buildroot}/etc/init.d/flexgw
+cp -rv %{_builddir}/%{name}-%{version}/* %{buildroot}/usr/local/flexgw/
+cp -rv %{pyenv_build_dir}/pyenv/* %{buildroot}/usr/local/flexgw/pyenv/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -59,11 +59,11 @@ rm -rf %{pyenv_build_dir}
 
 %files
 %defattr(-,root,root)
-/usr/local/ecs-vpn/*
+/usr/local/flexgw/*
 %attr(0755,root,root) /etc/init.d/*
-%attr(0755,root,root) /usr/local/ecs-vpn/scripts/*
-%exclude /usr/local/ecs-vpn/packaging
-%config(noreplace) /usr/local/ecs-vpn/instance/*
+%attr(0755,root,root) /usr/local/flexgw/scripts/*
+%exclude /usr/local/flexgw/packaging
+%config(noreplace) /usr/local/flexgw/instance/*
 
 %changelog
 
