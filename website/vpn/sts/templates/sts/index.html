@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block title %}VPN Site-to-Site{% endblock title%}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li><a href="{{ url_for('sts.index') }}">VPN</a></li>
+        <li class="current"><a href="{{ url_for('sts.index') }}">Site-to-Site</a></li>
+{% endblock trail %}
+
+{% block content %}
+    {% include "sts/sidenav.html" %}
+
+    <!-- start of vpn table -->
+    <div class="large-10 columns">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div data-alert class="alert-box {{ category }}">
+        {{ message }}
+        <a href="#" class="close">&times;</a>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <table>
+        <thead>
+          <tr>
+            <th>隧道ID</th>
+            <th>启动类型</th>
+            <th>本端子网</th>
+            <th>对端EIP</th>
+            <th>对端子网</th>
+            <th>状态</th>
+            <th>查看</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if tunnels %}
+          {% for tunnel in tunnels %}
+          <tr>
+            <td><a href="{{ url_for('sts.settings', id=tunnel.id) }}">{{ tunnel.name }}</a></td>
+            <td>{% if tunnel.rules.auto == 'add' %}手工连接{% else %}服务启动自动连接{% endif %}</td>
+            <td>{{ tunnel.rules.leftsubnet }}</td>
+            <td>{{ tunnel.rules.right }}</td>
+            <td>{{ tunnel.rules.rightsubnet }}</td>
+            <td>
+              {% if tunnel.status %}
+                <span class="success label">Online</span>
+              {% else %}
+                <span class="secondary label">Offline</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{{ url_for('sts.flow', id=tunnel.id) }}" class="bitty button">流量</a>
+            </td>
+            <td>
+              <form method="POST" action="{{ url_for('sts.updown') }}">
+                {{ form.tunnel_name(value=tunnel.name, type="hidden") }}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                {% if tunnel.status %}
+                {{ form.down(class="alert bitty button") }}
+                {% else %}
+                {{ form.up(class="alert bitty button") }}
+                {% endif %}
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+    <!-- end of vpn table -->
+{% endblock content %}
+

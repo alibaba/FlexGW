@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}VPN 新增拨号{% endblock title%}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li>VPN</li>
+        <li class="current"><a href="{{ url_for('dial.index') }}">Dial</a></li>
+{% endblock trail %}
+
+{% block content %}
+    {% include "dial/sidenav.html" %}
+
+    <!-- start of sts vpn table -->
+    <div class="large-10 columns">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div data-alert class="alert-box {{ category }}">
+        {{ message }}
+        <a href="#" class="close">&times;</a>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <div data-alert class="alert-box info">
+        注意：「账号名」只可包含如下字符：数字、字母、下划线。
+      </div>
+      <form method="POST" action="{{ url_for('dial.add') }}">
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.name.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {% if form.name.errors %}
+            {{ form.name(class="error", value=form.name.value) }}
+            <small class="error">{{ form.name.errors[0] }}</small>
+            {% else %}
+            {{ form.name(placeholder="test_1") }}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.password.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {% if form.password.errors %}
+            {{ form.password(class="error", value=form.password.value) }}
+            <small class="error">{{ form.password.errors[0] }}</small>
+            {% else %}
+            {{ form.password(placeholder="password") }}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-3 columns large-offset-3">
+            <button class="tiny success">保存</button>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- end of sts vpn table -->
+{% endblock content %}
+

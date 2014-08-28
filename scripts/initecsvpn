@@ -1,0 +1,20 @@
+#!/bin/bash
+
+function doit {
+    # build cert.
+    cd /usr/local/ecs-vpn/scripts
+    ./cert-build
+    cd /usr/local/ecs-vpn/scripts/keys
+    cp -fv ca.crt server.crt server.key dh1024.pem /etc/openvpn/
+    cp -fv ca.crt server.crt server.key /usr/local/ecs-vpn/instance/
+    # packaging openvpn client config files.
+    cd /usr/local/ecs-vpn/website/vpn/dial/static
+    zip -qj windows-openvpn-client.zip /etc/openvpn/ca.crt /usr/local/ecs-vpn/rc/openvpn-client.ovpn
+    tar -czvf linux-openvpn-client.tar.gz -C /etc/openvpn ca.crt -C /home/xiong.xiaox/ecs-vpn/rc openvpn-client.conf
+    # setting flask website SECRET_KEY
+    echo "SECRET_KEY = '$(head -c 32 /dev/random | base64 | head -c 32)'" >> /usr/local/ecs-vpn/instance/application.cfg
+
+}
+
+doit 1>/dev/null 2>&1 &
+rm -rf /etc/rc3.d/S98initecsvpn

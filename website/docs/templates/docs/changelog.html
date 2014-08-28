@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}Docs{% endblock %}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li>Docs</li>
+        <li class="current"><a href="{{ url_for('docs.changelog') }}">ChangeLog</a></li>
+{% endblock trail %}
+
+{% block content %}
+    {% include "docs/sidenav.html" %}
+
+    <!-- start of issue table -->
+    <div class="large-10 columns">
+      <div class="row">
+        <div class="large-12 columns">
+          <div class="panel">
+            <h3>ChangeLog</h3>
+            <hr />
+            <h5>1.0.0</h5>
+            <ul>
+              <li>首次发布，支持IPSec VPN、拨号VPN、SNAT 功能。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of issue table -->
+{% endblock content %}

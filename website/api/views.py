@@ -16,7 +16,7 @@ from flask import request, jsonify
 
 from flask.ext.login import login_required
 
-from website.vpn.services import VpnServer
+from website.vpn.sts.services import VpnServer
 
 
 api = Blueprint('api', __name__, url_prefix='/api')
@@ -26,7 +26,7 @@ api = Blueprint('api', __name__, url_prefix='/api')
 @login_required
 def vpn_traffic(tunnel_name):
     vpn = VpnServer()
-    return jsonify(vpn.tunnel_traffic(tunnel_name))
+    return jsonify(vpn.tunnel_traffic(tunnel_name) or [])
 
 
 @api.route('/vpn/<tunnel_name>/up')

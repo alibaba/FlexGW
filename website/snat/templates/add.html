@@ -29,6 +29,9 @@
       {% endfor %}
       {% endif %}
       {% endwith %}
+      <div data-alert class="alert-box info">
+        注意：「SNAT转发IP」为私网IP，非EIP。
+      </div>
       <form method='POST' action='/snat/add'>
         <div class="row">
           <div class="large-3 columns">
@@ -39,7 +42,7 @@
             {{ form.source(class="error", value=form.source.value) }}
             <small class="error">{{ form.source.errors[0] }}</small>
             {% else %}
-            {{ form.source(placeholder="192.168.1.0/24") }}
+            {{ form.source(placeholder="192.168.0.0/24") }}
             {% endif %}
           </div>
         </div>
@@ -52,7 +55,7 @@
             {{ form.gateway(class="error", value=form.source.value) }}
             <small class="error">{{ form.gateway.errors[0] }}</small>
             {% else %}
-            {{ form.gateway(placeholder="10.20.0.1") }}
+            {{ form.gateway(placeholder="192.168.0.1") }}
             {% endif %}
           </div>
         </div>

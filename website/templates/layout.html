@@ -21,8 +21,8 @@
   <!-- start of header -->
   <header class="contain-to-grid">
     <div class="row">
-      <div class="large-2 columns">
-        <a href="/"><h2>GateWay</h2></a>
+      <div class="large-5 columns">
+        <a href="/"><h2>VPN/SNAT GateWay</h2></a>
       </div>
     </div>
   </header>
@@ -43,24 +43,13 @@
         <section class="top-bar-section">
           <!-- Right Nav Section -->
           <ul class="left">
-            <li class="has-dropdown {% if 'vpn' in request.endpoint %}active{% endif %}">
-              <a href="#">IPSec VPN</a>
-              <ul class="dropdown">
-                <li><a href="/vpn/sts">Site-to-Site</a></li>
-                <li><a href="/vpn/dial">拨号接入</a></li>
-              </ul>
-            </li>
-            <li{% if 'snat' in request.endpoint %} class="active" {% endif %}><a href="/snat">SNAT</a></li>
+            <li{% if 'sts.' in request.endpoint %} class="active" {% endif %}><a href="/vpn/sts/">IPSec VPN</a></li>
+            <li{% if 'dial.' in request.endpoint %} class="active" {% endif %}><a href="/vpn/dial/">拨号 VPN</a></li>
+            <li{% if 'snat.' in request.endpoint %} class="active" {% endif %}><a href="/snat">SNAT</a></li>
           </ul>
           <ul class="right">
-            <li{% if 'docs' in request.endpoint %} class="active" {% endif %}><a href="/docs"><i class="fi-page-doc"> </i>Docs</a></li>
-            <li class="has-dropdown">
-              <a href="#"><i class="fi-torso-business"> </i>admin</a>
-              <ul class="dropdown">
-                <li><a href="/account/settings">Settings</a></li>
-                <li><a href="/logout">Logout</a></li>
-              </ul>
-            </li>
+            <li{% if 'docs.' in request.endpoint %} class="active" {% endif %}><a href="/docs"><i class="fi-page-doc"> </i>文档</a></li>
+            <li><a href="/logout"><i class="fi-torso-business"> </i>{{ g.account }} 退出</a></li>
           </ul>
         </section>
       </nav>

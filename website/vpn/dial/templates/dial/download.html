@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% block title %}VPN Dial{% endblock title%}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li>VPN</li>
+        <li class="current"><a href="{{ url_for('dial.index') }}">Dial</a></li>
+{% endblock trail %}
+
+{% block content %}
+    {% include "dial/sidenav.html" %}
+
+    <!-- start of vpn table -->
+    <div class="large-10 columns">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div data-alert class="alert-box {{ category }}">
+        {{ message }}
+        <a href="#" class="close">&times;</a>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <div data-alert class="alert-box info">
+        注意：「配置」文件下载后，请将配置文件中的「remote IP」字段修改为本机绑定的EIP 地址。
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>说明</th>
+            <th>客户端</th>
+            <th>配置文件</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Installer (32-bit), Windows XP and later</td>
+            <td><a href="{{ url_for('dial.static', filename='openvpn-install-2.3.4-I003-i686.exe') }}">openvpn-install-2.3.4-I003-i686.exe</a></td>
+            <td><a href="{{ url_for('dial.static', filename='windows-openvpn-client.zip') }}">windows-openvpn-client.zip</a></td>
+          </tr>
+          <tr>
+            <td>Installer (64-bit), Windows XP and later</td>
+            <td><a href="{{ url_for('dial.static', filename='openvpn-install-2.3.4-I003-x86_64.exe') }}">openvpn-install-2.3.4-I003-x86_64.exe</a></td>
+            <td><a href="{{ url_for('dial.static', filename='windows-openvpn-client.zip') }}">windows-openvpn-client.zip</a></td>
+          </tr>
+          <tr>
+            <td>Installer (32-bit), Windows Vista and later</td>
+            <td><a href="{{ url_for('dial.static', filename='openvpn-install-2.3.4-I603-i686.exe') }}">openvpn-install-2.3.4-I603-i686.exe</a></td>
+            <td><a href="{{ url_for('dial.static', filename='windows-openvpn-client.zip') }}">windows-openvpn-client.zip</a></td>
+          </tr>
+          <tr>
+            <td>Installer (64-bit), Windows Vista and later</td>
+            <td><a href="{{ url_for('dial.static', filename='openvpn-install-2.3.4-I603-x86_64.exe') }}">openvpn-install-2.3.4-I603-x86_64.exe</a></td>
+            <td><a href="{{ url_for('dial.static', filename='windows-openvpn-client.zip') }}">windows-openvpn-client.zip</a></td>
+          </tr>
+          <tr>
+            <td>Centos</td>
+            <td>sudo yum install openvpn</a></td>
+            <td><a href="{{ url_for('dial.static', filename='linux-openvpn-client.tar.gz') }}">linux-openvpn-client.tar.gz</a></td>
+          </tr>
+          <tr>
+            <td>Debian/Ubuntu</td>
+            <td>sudo apt-get install openvpn</a></td>
+            <td><a href="{{ url_for('dial.static', filename='linux-openvpn-client.tar.gz') }}">linux-openvpn-client.tar.gz</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- end of vpn table -->
+{% endblock content %}
+

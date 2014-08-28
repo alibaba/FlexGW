@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}VPN Dial{% endblock title%}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li>VPN</li>
+        <li class="current"><a href="{{ url_for('dial.index') }}">Dial</a></li>
+{% endblock trail %}
+
+{% block content %}
+    {% include "dial/sidenav.html" %}
+
+    <!-- start of vpn table -->
+    <div class="large-10 columns">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div data-alert class="alert-box {{ category }}">
+        {{ message }}
+        <a href="#" class="close">&times;</a>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <div data-alert class="alert-box info">
+        注意：「状态」由于VPN 的keepalive 机制，会有1分钟左右的延时。
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>账号名</th>
+            <th>真实IP</th>
+            <th>虚拟IP</th>
+            <th>状态</th>
+            <th>Bytes Received</th>
+            <th>Bytes Sent</th>
+            <th>连接时间</th>
+            <th>账号创建时间</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if accounts %}
+          {% for account in accounts %}
+          <tr>
+            <td><a href="{{ url_for('dial.id_settings', id=account.id) }}">{{ account.name }}</a></td>
+            <td>{{ account.rip }}</td>
+            <td>{{ account.vip }}</td>
+            <td>
+              {% if account.vip %}
+                <span class="success label">Online</span>
+              {% else %}
+                <span class="secondary label">Offline</span>
+              {% endif %}
+            </td>
+            <td>{{ account.br }}</td>
+            <td>{{ account.bs }}</td>
+            <td>{{ account.ct }}</td>
+            <td>{{ account.created_at }}</td>
+          </tr>
+          {% endfor %}
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+    <!-- end of vpn table -->
+{% endblock content %}
+
