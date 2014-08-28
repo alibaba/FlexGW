@@ -7,6 +7,9 @@ function doit {
     cd /usr/local/flexgw/scripts/keys
     cp -fv ca.crt server.crt server.key dh1024.pem /etc/openvpn/
     cp -fv ca.crt server.crt server.key /usr/local/flexgw/instance/
+    # init strongswan & openvpn config files.
+    cp -fv /usr/local/flexgw/rc/strongswan.conf /etc/strongswan/strongswan.conf
+    cp -fv /usr/local/flexgw/rc/openvpn.conf /etc/openvpn/server.conf
     # packaging openvpn client config files.
     cd /usr/local/flexgw/website/vpn/dial/static
     zip -qj windows-openvpn-client.zip /etc/openvpn/ca.crt /usr/local/flexgw/rc/openvpn-client.ovpn
