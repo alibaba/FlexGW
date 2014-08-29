@@ -10,12 +10,11 @@
 """
 
 
-from flask import Blueprint, render_template
-from flask import url_for, redirect, flash
-from flask import request, jsonify
+from flask import Blueprint, jsonify
 
 from flask.ext.login import login_required
 
+from website.services import exec_command
 from website.vpn.sts.services import VpnServer
 
 
@@ -34,3 +33,18 @@ def vpn_traffic(tunnel_name):
 def tunnel_up(tunnel_name):
     vpn = VpnServer()
     return jsonify({'result': vpn.tunnel_up(tunnel_name), 'stdout': vpn.c_stdout})
+
+
+@api.route('/checkupdate')
+def check_update():
+    cmd = ['yum', 'list', 'updates']
+    try:
+        r = exec_command(cmd, timeout=10)
+    except:
+        return jsonify({"message": "exec system command 'yum list updates' Error!"}), 500
+    if r['return_code'] != 0:
+        return jsonify({"message": "yum list updates Failed!"}), 504
+    for line in r['stdout'].split('\n'):
+        if 'flexgw' in line:
+            return jsonify({"message": u"发现新版本！"})
+    return jsonify({"message": u"已经是最新新版了！"}), 404
