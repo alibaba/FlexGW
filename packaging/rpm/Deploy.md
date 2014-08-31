@@ -17,5 +17,3 @@ run flexgw
 1. ln -s /etc/init.d/initflexgw /etc/rc3.d/S98initflexgw
 
 2. reboot
-
-3. /etc/init.d/flexgw start
