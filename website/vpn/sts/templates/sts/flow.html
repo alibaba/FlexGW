@@ -40,7 +40,7 @@
 {% block jsplugin %}
 <script src="{{ url_for('static', filename='js/vendor/d3.v3.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/vendor/epoch.0.5.2.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/vendor/data.js') }}"></script>
+<script src="{{ url_for('static', filename='js/flow.js') }}"></script>
 <script>
 $(function() {
     var data = new RealTimeData('{{ tunnel.name }}');
