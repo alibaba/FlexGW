@@ -182,6 +182,11 @@ td a {
   text-align: center;
 }
 
+a.box-link {
+  color: #FFF;
+  text-decoration: underline;
+}
+
 
 /* -----------------------------------------
    For login

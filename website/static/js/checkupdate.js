@@ -26,17 +26,17 @@
                 showLoading();
             },
             success: function (res, status, xhr) {
-                var msg = res.responseJSON;
-                showMessage(msg.message, 'success');
-                console.log(msg);
+                console.log(res);
+                var message = res.message + '<a class="box-link" href="/docs/update">点此</a>查看升级方法。'
+                showMessage(message, 'success');
             },
             complete: function (xhr, status) {
                 hideLoading();
             },
             error: function (xhr, status, thrown) {
                 var err = xhr.responseJSON;
-                showMessage(err.message, 'alert');
                 console.log(err);
+                showMessage(err.message, 'alert');
             }
         });
     });

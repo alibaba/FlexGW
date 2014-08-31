@@ -46,5 +46,6 @@ def check_update():
         return jsonify({"message": "yum list updates Failed!"}), 504
     for line in r['stdout'].split('\n'):
         if 'flexgw' in line:
-            return jsonify({"message": u"发现新版本！"})
-    return jsonify({"message": u"已经是最新新版了！"}), 404
+            info = u"发现新版本：%s: %s！" % (line.split()[0], line.split()[1])
+            return jsonify({"message": info})
+    return jsonify({"message": u"已经是最新版本了！"}), 404
