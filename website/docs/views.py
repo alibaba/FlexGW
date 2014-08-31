@@ -56,6 +56,12 @@ def debug():
     return render_template('docs/debug.html')
 
 
+@docs.route('/update')
+@login_required
+def update():
+    return render_template('docs/update.html')
+
+
 @docs.route('/changelog')
 @login_required
 def changelog():

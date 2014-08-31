@@ -176,6 +176,17 @@ td a {
   color: #FFF;
 }
 
+.alert-box.loader {
+  background-color: transparent;
+  border-color: transparent;
+  text-align: center;
+}
+
+a.box-link {
+  color: #FFF;
+  text-decoration: underline;
+}
+
 
 /* -----------------------------------------
    For login

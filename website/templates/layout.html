@@ -49,6 +49,7 @@
           </ul>
           <ul class="right">
             <li{% if 'docs.' in request.endpoint %} class="active" {% endif %}><a href="/docs"><i class="fi-page-doc"> </i>文档</a></li>
+            <li><a href="#" id="checkupdate">检查更新</a></li>
             <li><a href="/logout"><i class="fi-torso-business"> </i>{{ g.account }} 退出</a></li>
           </ul>
         </section>
@@ -101,6 +102,7 @@
 
   <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
   <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/checkupdate.js') }}"></script>
   <script>
     $(document).foundation();
   </script>

@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Docs{% endblock %}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li>Docs</li>
+        <li class="current"><a href="{{ url_for('docs.update') }}">升级指南</a></li>
+{% endblock trail %}
+
+{% block content %}
+    {% include "docs/sidenav.html" %}
+
+    <!-- start of issue table -->
+    <div class="large-10 columns">
+      <div class="row">
+        <div class="large-12 columns">
+          <div class="panel">
+            <h3>升级指南</h3>
+            <hr />
+            <p>当检测到升级信息时，请按如下方法进行升级：</p>
+            <ol>
+              <li>通过ssh 或者VNC 管理终端登录VM。</li>
+              <li>以root 或者sudo 身份执行命令：yum update flexgw</li>
+              <li>根据提示进行升级。</li>
+            </ol>
+            <p>注意：升级前，建议备份/usr/local/flexgw/instance/* 目录下的数据文件！</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of issue table -->
+{% endblock content %}
