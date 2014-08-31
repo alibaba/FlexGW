@@ -36,7 +36,7 @@
             error: function (xhr, status, thrown) {
                 var err = xhr.responseJSON;
                 console.log(err);
-                showMessage(err.message, 'alert');
+                showMessage(err ? err.message : '检测更新失败！', 'alert');
             }
         });
     });
