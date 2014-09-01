@@ -15,7 +15,7 @@ function doit {
     zip -qj windows-openvpn-client.zip /etc/openvpn/ca.crt /usr/local/flexgw/rc/openvpn-client.ovpn
     tar -czvf linux-openvpn-client.tar.gz -C /etc/openvpn ca.crt -C /usr/local/flexgw/rc openvpn-client.conf
     # setting flask website SECRET_KEY
-    echo "SECRET_KEY = '$(head -c 32 /dev/random | base64 | head -c 32)'" >> /usr/local/flexgw/instance/application.cfg
+    echo "SECRET_KEY = '$(head -c 32 /dev/urandom | base64 | head -c 32)'" >> /usr/local/flexgw/instance/application.cfg
     # set auto start
     chkconfig flexgw on
     # starting website
