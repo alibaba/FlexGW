@@ -19,9 +19,11 @@
             <hr />
             <p>当检测到升级信息时，请按如下方法进行升级：</p>
             <ol>
-              <li>通过ssh 或者VNC 管理终端登录VM。</li>
-              <li>以root 或者sudo 身份执行命令：yum update flexgw</li>
+              <li>通过ssh 或者VNC 管理终端登录VM，切换到root 账号，或者sudo 权限。</li>
+              <li>关闭flexgw，执行命令：/etc/init.d/flexgw stop</li>
+              <li>升级，执行命令：yum update flexgw</li>
               <li>根据提示进行升级。</li>
+              <li>升级完成，启动flexgw：/etc/init.d/flexgw start</li>
             </ol>
             <p>注意：升级前，建议备份/usr/local/flexgw/instance/* 目录下的数据文件！</p>
           </div>

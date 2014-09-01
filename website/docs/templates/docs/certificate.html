@@ -17,20 +17,38 @@
           <div class="panel">
             <h3>关于VPN 证书</h3>
             <hr />
+            <p>考虑到证书的唯一性、安全性，我们的证书文件是VM 第一次启动时，通过脚本自动生成的，其原始目录为：/usr/local/flexgw/scripts/keys，下面所提到的证书文件，均为该目录下的证书文件的拷贝。</p>
+            <h4>IPSec Site-to-Site 隧道：</h4>
             <p>IPSec Site-to-Site VPN 采用的时PSK 方式加密连接，并不使用证书认证。</p>
-            <p>拨号VPN 使用了证书。考虑到证书的唯一性、安全性，我们的证书文件是VM 第一次启动时，通过脚本自动生成的，与OpenVPN 配置文件server.conf 一起放在/etc/openvpn 下。</p>
-            <h5>其中：</h5>
+            <h4>拨号VPN：</h4>
+            <p>拨号VPN 的证书，位于/etc/openvpn 下：</p>
             <ol>
               <li>ca.crt：是根证书，服务器和客户端都需要保存。</li>
               <li>server.crt：是服务器的证书，由CA 证书进行签名。</li>
               <li>server.key：是服务器的证书对应秘钥。</li>
               <li>dh1024.pem：DH 算法参数文件。</li>
             </ol>
+            <h4>网站HTTPS 证书：</h4>
+            <p>网站的证书，位于/usr/local/flexgw/instance 目录下：</p>
+            <ol>
+              <li>ca.crt：是根证书。</li>
+              <li>server.crt：是服务器的证书，由CA 证书进行签名。</li>
+              <li>server.key：是服务器的证书对应秘钥。</li>
+            </ol>
             <h3>使用自己的证书</h3>
             <hr />
-            <p>如果你希望使用自己的证书，可以使用openssl命令生成自己的根证书、服务器证书、以及DH算法参数文件，将其放在/etc/openvpn 下替换掉相应的证书文件即可。<br />
-            同时，客户端也要使用新的CA 证书来替换掉原来的根证书。<br />
-            最后，还需要通过「VPN 服务管理」页面重启一下拨号VPN 服务。</p>
+            <p>如果你希望使用自己的证书，可以使用openssl命令生成自己的根证书、服务器证书、以及DH算法参数文件。</p>
+            <h4>拨号VPN：</h4>
+            <ol>
+              <li>将生成的证书文件，拷贝到在/etc/openvpn 目录下替换掉相应的证书文件。</li>
+              <li>客户端也要使用新的CA 证书来替换掉原来的根证书。可通过/usr/local/flexgw/scripts/packconfig 脚本，重新打包openvpn client 配置文件，打包后的配置文件位于：/usr/local/flexgw/website/vpn/dial/static 目录下。请将配置文件，重新分发给客户端。</li>
+              <li>通过「VPN 服务管理」页面重启拨号VPN 服务。</li>
+            </ol>
+            <h4>网站HTTPS 证书：</h4>
+            <ol>
+              <li>将生成的证书文件，拷贝到在/usr/local/flexgw/instance 目录下替换掉相应的证书文件。</li>
+              <li>重启网站：/etc/init.d/flexgw restart</li>
+            </ol>
           </div>
         </div>
       </div>
