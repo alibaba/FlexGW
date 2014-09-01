@@ -37,15 +37,15 @@ def tunnel_up(tunnel_name):
 
 @api.route('/checkupdate')
 def check_update():
-    cmd = ['yum', 'list', 'updates']
+    cmd = ['/usr/local/flexgw/scripts/update', '--check']
     try:
         r = exec_command(cmd, timeout=10)
     except:
-        return jsonify({"message": "exec system command 'yum list updates' Error!"}), 500
+        return jsonify({"message": "run `/usr/local/flexgw/scripts/update --check' Error!"}), 500
     if r['return_code'] != 0:
-        return jsonify({"message": "yum list updates Failed!"}), 504
+        return jsonify({"message": "update check Failed!"}), 504
     for line in r['stdout'].split('\n'):
-        if 'flexgw' in line:
-            info = u"发现新版本：%s: %s！" % (line.split()[0], line.split()[1])
+        if ' new ' in line:
+            info = u"发现新版本：%s！" % (line.split(':')[1])
             return jsonify({"message": info})
     return jsonify({"message": u"已经是最新版本了！"}), 404

@@ -207,10 +207,10 @@ check() {
   package_name=$(basename $package_url)
   version="${package_name%.rpm*}"
   if [[ "x$version" > "x$current_package" ]]; then
-    echo "Found new version: $version" >&2
+    echo "Found new version: $version"
     return 1
   else
-    echo "Already latest version." >&2
+    echo "Already latest version."
     return 0
   fi
 }
