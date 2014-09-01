@@ -200,7 +200,7 @@ check() {
   } >&2
 
   pushd "$DOWNLOAD_PATH" >&4
-  fetch_version_file "$VERSION_FILENAME" "$MASTER_URL/$VERSION_FILENAME"
+  fetch_version_file "$VERSION_FILENAME" "$MASTER_URL/$VERSION_FILENAME" || update_failed
   package_url=$(head -n 1 $VERSION_FILENAME)
   popd >&4
 
