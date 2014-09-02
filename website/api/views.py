@@ -41,9 +41,9 @@ def check_update():
     try:
         r = exec_command(cmd, timeout=10)
     except:
-        return jsonify({"message": "run `/usr/local/flexgw/scripts/update --check' Error!"}), 500
+        return jsonify({"message": u"执行命令：`/usr/local/flexgw/scripts/update --check' 失败!"}), 500
     if r['return_code'] != 0:
-        return jsonify({"message": "update check Failed!"}), 504
+        return jsonify({"message": u"检查更新失败，请手工执行命令：`/usr/local/flexgw/scripts/update --check'"}), 504
     for line in r['stdout'].split('\n'):
         if ' new ' in line:
             info = u"发现新版本：%s！" % (line.split(':')[1])
