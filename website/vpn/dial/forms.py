@@ -17,24 +17,38 @@ from wtforms import StringField, SubmitField, TextAreaField, ValidationError
 from wtforms.validators import DataRequired, Length
 
 
+def _ipool(value):
+    try:
+        ip = value.split('/')[0]
+        mask = int(value.split('/')[1])
+    except:
+        return False
+    if mask < 0 or mask > 32:
+        return False
+    parts = ip.split('.')
+    if len(parts) == 4 and all(x.isdigit() for x in parts):
+        numbers = list(int(x) for x in parts)
+        if not all(num >= 0 and num < 256 for num in numbers):
+            return False
+        return True
+    return False
+
+
 def IPool(message=u"无效的地址段"):
-    def _ipool(form, field):
+    def __ipool(form, field):
         value = field.data
-        try:
-            ip = value.split('/')[0]
-            mask = int(value.split('/')[1])
-        except:
+        if not _ipool(value):
             raise ValidationError(message)
-        if mask < 0 or mask > 32:
+    return __ipool
+
+
+def SubNets(message=u"无效的子网"):
+    def __subnets(form, field):
+        value = field.data
+        parts = [i.strip() for i in value.split(',')]
+        if not all(_ipool(part) for part in parts):
             raise ValidationError(message)
-        parts = ip.split('.')
-        if len(parts) == 4 and all(x.isdigit() for x in parts):
-            numbers = list(int(x) for x in parts)
-            if not all(num >= 0 and num < 256 for num in numbers):
-                raise ValidationError(message)
-            return True
-        raise ValidationError(message)
-    return _ipool
+    return __subnets
 
 
 class AddForm(Form):
@@ -53,7 +67,8 @@ class SettingsForm(Form):
                         validators=[DataRequired(message=u'这是一个必选项！'),
                                     IPool(message=u"无效的IP 地址池")])
     subnet = TextAreaField(u'子网网段',
-                           validators=[DataRequired(message=u'这是一个必选项！')])
+                           validators=[DataRequired(message=u'这是一个必选项！'),
+                                       SubNets(message=u"无效的子网")])
 
 
 class ConsoleForm(Form):

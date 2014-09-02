@@ -17,6 +17,32 @@ from wtforms import ValidationError
 from wtforms.validators import DataRequired, Length
 
 
+def _ipool(value):
+    try:
+        ip = value.split('/')[0]
+        mask = int(value.split('/')[1])
+    except:
+        return False
+    if mask < 0 or mask > 32:
+        return False
+    parts = ip.split('.')
+    if len(parts) == 4 and all(x.isdigit() for x in parts):
+        numbers = list(int(x) for x in parts)
+        if not all(num >= 0 and num < 256 for num in numbers):
+            return False
+        return True
+    return False
+
+
+def SubNets(message=u"无效的子网"):
+    def __subnets(form, field):
+        value = field.data
+        parts = [i.strip() for i in value.split(',')]
+        if not all(_ipool(part) for part in parts):
+            raise ValidationError(message)
+    return __subnets
+
+
 def PublicIP(message=u"无效的公网地址！"):
     def _publicip(form, field):
         value = field.data
@@ -43,12 +69,14 @@ class AddForm(Form):
     start_type = SelectField(u'启动类型',
                              choices=[('add', u'手工连接'), ('start', u'服务启动自动连接')])
     local_subnet = TextAreaField(u'本端子网',
-                                  validators=[DataRequired(message=u'这是一个必选项！')])
+                                  validators=[DataRequired(message=u'这是一个必选项！'),
+                                              SubNets(message=u"无效的子网")])
     remote_ip = StringField(u'对端EIP',
                             validators=[DataRequired(message=u'这是一个必选项！'),
                                         PublicIP(message=u'EIP 应该为真实有效的公网IP 地址！')])
     remote_subnet = TextAreaField(u'对端子网',
-                                  validators=[DataRequired(message=u'这是一个必选项！')])
+                                  validators=[DataRequired(message=u'这是一个必选项！'),
+                                              SubNets(message=u"无效的子网")])
     psk = StringField(u'预共享秘钥',
                       validators=[DataRequired(message=u'这是一个必选项！')])
     #: submit button
