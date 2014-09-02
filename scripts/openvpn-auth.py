@@ -11,8 +11,8 @@
 
 
 import os
+import re
 import sys
-
 import sqlite3
 
 
@@ -30,6 +30,9 @@ def __query_db(query, args=(), one=False):
 
 
 def _auth(name, password):
+    regex = re.compile(r'^[\w]+$', 0)
+    if not regex.match(name) or not regex.match(password):
+        sys.exit(1)
     account = __query_db('select * from dial_account where name = ?', [name], one=True)
     if account is None:
         sys.exit(1)
