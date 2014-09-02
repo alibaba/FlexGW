@@ -14,7 +14,7 @@
 
 from flask_wtf import Form
 from wtforms import StringField, SubmitField, TextAreaField, ValidationError
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, Regexp
 
 
 def _ipool(value):
@@ -54,9 +54,12 @@ def SubNets(message=u"无效的子网"):
 class AddForm(Form):
     name = StringField(u'账号名',
                        validators=[DataRequired(message=u'这是一个必选项！'),
-                                   Length(max=20, message=u'帐号最长为20个字符！')])
+                                   Length(max=20, message=u'帐号最长为20个字符！'),
+                                   Regexp(r'^[\w]+$', message=u"只可包含如下字符：数字、字母、下划线！")])
     password = StringField(u'密码',
-                           validators=[DataRequired(message=u'这是一个必选项！')])
+                           validators=[DataRequired(message=u'这是一个必选项！'),
+                                       Length(max=20, message=u'密码最长为20个字符！'),
+                                       Regexp(r'^[\w]+$', message=u"只可包含如下字符：数字、字母、下划线！")])
     #: submit button
     save = SubmitField(u'保存')
     delete = SubmitField(u'删除')
