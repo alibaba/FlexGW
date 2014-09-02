@@ -156,7 +156,7 @@ fetch_rpm() {
     fi
   fi
 
-  echo "Downloading ${rpm_filename}..." >&2
+  echo "Downloading ${package_name}..." >&2
   http head "$mirror_url" &&
   download_file "$mirror_url" "$package_name" "$checksum" ||
   download_file "$package_url" "$package_name" "$checksum"
