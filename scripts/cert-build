@@ -47,7 +47,7 @@ if [ "$KEY_DIR" ]; then
     mkdir "$KEY_DIR" && \
     	chmod go-rwx "$KEY_DIR" && \
     	touch "$KEY_DIR/index.txt" && \
-    	echo 01 >"$KEY_DIR/serial"
+    	echo "$(dmidecode -s system-uuid)" >"$KEY_DIR/serial"
 fi
 
 #
