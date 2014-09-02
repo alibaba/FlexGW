@@ -13,8 +13,28 @@
 
 
 from flask_wtf import Form
-from wtforms import StringField, SubmitField, TextAreaField
+from wtforms import StringField, SubmitField, TextAreaField, ValidationError
 from wtforms.validators import DataRequired, Length
+
+
+def IPool(message=u"无效的地址段"):
+    def _ipool(form, field):
+        value = field.data
+        try:
+            ip = value.split('/')[0]
+            mask = int(value.split('/')[1])
+        except:
+            raise ValidationError(message)
+        if mask < 0 or mask > 32:
+            raise ValidationError(message)
+        parts = ip.split('.')
+        if len(parts) == 4 and all(x.isdigit() for x in parts):
+            numbers = list(int(x) for x in parts)
+            if not all(num >= 0 and num < 256 for num in numbers):
+                raise ValidationError(message)
+            return True
+        raise ValidationError(message)
+    return _ipool
 
 
 class AddForm(Form):
@@ -30,7 +50,8 @@ class AddForm(Form):
 
 class SettingsForm(Form):
     ipool = StringField(u'虚拟IP 地址池',
-                        validators=[DataRequired(message=u'这是一个必选项！')])
+                        validators=[DataRequired(message=u'这是一个必选项！'),
+                                    IPool(message=u"无效的IP 地址池")])
     subnet = TextAreaField(u'子网网段',
                            validators=[DataRequired(message=u'这是一个必选项！')])
 

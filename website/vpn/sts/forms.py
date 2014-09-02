@@ -29,7 +29,9 @@ def PublicIP(message=u"无效的公网地址！"):
                 raise ValidationError(message)
             elif numbers[0] == 172 and numbers[1] >= 16 and numbers[1] <= 31:
                 raise ValidationError(message)
-            return all(num >= 0 and num < 256 for num in numbers)
+            elif not all(num >= 0 and num < 256 for num in numbers):
+                raise ValidationError(message)
+            return True
         raise ValidationError(message)
     return _publicip
 
@@ -44,7 +46,7 @@ class AddForm(Form):
                                   validators=[DataRequired(message=u'这是一个必选项！')])
     remote_ip = StringField(u'对端EIP',
                             validators=[DataRequired(message=u'这是一个必选项！'),
-                                        PublicIP(message=u'EIP 应该为公网IP 地址！')])
+                                        PublicIP(message=u'EIP 应该为真实有效的公网IP 地址！')])
     remote_subnet = TextAreaField(u'对端子网',
                                   validators=[DataRequired(message=u'这是一个必选项！')])
     psk = StringField(u'预共享秘钥',
