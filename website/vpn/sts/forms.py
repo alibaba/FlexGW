@@ -13,7 +13,25 @@
 
 from flask_wtf import Form
 from wtforms import StringField, SelectField, TextAreaField, SubmitField
-from wtforms.validators import DataRequired, Length, IPAddress
+from wtforms import ValidationError
+from wtforms.validators import DataRequired, Length
+
+
+def PublicIP(message=u"无效的公网地址！"):
+    def _publicip(form, field):
+        value = field.data
+        parts = value.split('.')
+        if len(parts) == 4 and all(x.isdigit() for x in parts):
+            numbers = list(int(x) for x in parts)
+            if numbers[0] == 10:
+                raise ValidationError(message)
+            elif numbers[0] == 192 and numbers[1] == 168:
+                raise ValidationError(message)
+            elif numbers[0] == 172 and numbers[1] >= 16 and numbers[1] <= 31:
+                raise ValidationError(message)
+            return all(num >= 0 and num < 256 for num in numbers)
+        raise ValidationError(message)
+    return _publicip
 
 
 class AddForm(Form):
@@ -26,7 +44,7 @@ class AddForm(Form):
                                   validators=[DataRequired(message=u'这是一个必选项！')])
     remote_ip = StringField(u'对端EIP',
                             validators=[DataRequired(message=u'这是一个必选项！'),
-                                        IPAddress(message=u'无效的ip 地址！')])
+                                        PublicIP(message=u'EIP 应该为公网IP 地址！')])
     remote_subnet = TextAreaField(u'对端子网',
                                   validators=[DataRequired(message=u'这是一个必选项！')])
     psk = StringField(u'预共享秘钥',
