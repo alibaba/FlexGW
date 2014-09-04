@@ -1,9 +1,9 @@
 Name:      %{package_name}
 Version:   %{version}
-Vendor:    xiong.xiaox@alibaba-inc.com
+Vendor:    Flex GateWay Project
 Release:   %{release}%{?dist}
-Url:       http://gitlab.alibaba-inc.com/xiong.xiaox/ecs-vpn
-Summary:   a vpn, snat web for ecs.
+Url:       http://market.aliyun.com/image
+Summary:   a vpn, snat web app for ecs.
 License:   Commercial
 Group:     Applications/Internet
 Source0:   %{name}-%{version}.tar.bz2
@@ -21,8 +21,7 @@ AutoReqProv: no
 %define  debug_package %{nil}
 
 %description
-
-a vpn, snat web for ecs vpc vm.
+a vpn, snat web app for ecs vpc vm.
 
 %prep
 %setup -q -b 0
