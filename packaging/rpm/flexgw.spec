@@ -2,7 +2,6 @@ Name:      %{package_name}
 Version:   %{version}
 Vendor:    Flex GateWay Project
 Release:   %{release}%{?dist}
-Url:       http://market.aliyun.com/image
 Summary:   a vpn, snat web app for ecs.
 License:   Commercial
 Group:     Applications/Internet
