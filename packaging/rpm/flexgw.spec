@@ -62,6 +62,8 @@ rm -rf %{pyenv_build_dir}
 %attr(0755,root,root) /etc/init.d/*
 %attr(0755,root,root) /usr/local/flexgw/scripts/*
 %exclude /usr/local/flexgw/packaging
+%exclude /usr/local/flexgw/requirements.txt
+%exclude /usr/local/flexgw/develop.py
 %config(noreplace) /usr/local/flexgw/instance/*
 
 %changelog
