@@ -4,8 +4,6 @@
     ~~~~~~~~~~~~~~~~~~~~~~~
 
     vpn site-to-site helpers api.
-
-    :copyright: (c) 2014 by xiong.xiaox(xiong.xiaox@alibaba-inc.com).
 """
 
 

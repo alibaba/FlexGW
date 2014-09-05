@@ -4,8 +4,6 @@
     ~~~~~~~
 
     run app in debug mode.
-
-    :copyright: (c) 2014 by xiong.xiaox(xiong.xiaox@alibaba-inc.com).
 """
 
 from website import app
