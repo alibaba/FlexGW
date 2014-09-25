@@ -7,8 +7,6 @@
         /vpn/sts/add
         /vpn/sts/<int:id>
         /vpn/sts/<int:id>/settings
-
-    :copyright: (c) 2014 by xiong.xiaox(xiong.xiaox@alibaba-inc.com).
 """
 
 from flask import Blueprint, render_template

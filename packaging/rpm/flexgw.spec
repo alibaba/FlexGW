@@ -2,7 +2,6 @@ Name:      %{package_name}
 Version:   %{version}
 Vendor:    Flex GateWay Project
 Release:   %{release}%{?dist}
-Url:       http://market.aliyun.com/image
 Summary:   a vpn, snat web app for ecs.
 License:   Commercial
 Group:     Applications/Internet
@@ -62,6 +61,8 @@ rm -rf %{pyenv_build_dir}
 %attr(0755,root,root) /etc/init.d/*
 %attr(0755,root,root) /usr/local/flexgw/scripts/*
 %exclude /usr/local/flexgw/packaging
+%exclude /usr/local/flexgw/requirements.txt
+%exclude /usr/local/flexgw/develop.py
 %config(noreplace) /usr/local/flexgw/instance/*
 
 %changelog

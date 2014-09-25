@@ -237,13 +237,13 @@ if [ ! -w "$TMP" ] || [ ! -x "$TMP" ]; then
 fi
 
 if [ -z "$MASTER_URL" ]; then
-  MASTER_URL="http://10.68.51.25:8000"
+  MASTER_URL="http://mirrors.aliyun.com/sre/flexgw"
 else
   MASTER_URL="${MASTER_URL%/}"
 fi
 
 if [ -z "$MIRROR_URL" ]; then
-  MIRROR_URL="http://10.68.51.25:8000"
+  MIRROR_URL="http://mirrors.aliyuncs.com/sre/flexgw"
 else
   MIRROR_URL="${MIRROR_URL%/}"
 fi
