@@ -46,10 +46,10 @@
           </div>
           <div class="large-5 columns end">
             {% if form.password.errors %}
-            {{ form.password(class="error", value=form.password.value) }}
+            {{ form.password(class="error", type="password", value=form.password.value) }}
             <small class="error">{{ form.password.errors[0] }}</small>
             {% else %}
-            {{ form.password(placeholder="password") }}
+            {{ form.password(type="password", placeholder="password") }}
             {% endif %}
           </div>
         </div>

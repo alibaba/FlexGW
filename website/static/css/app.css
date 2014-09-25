@@ -187,6 +187,10 @@ a.box-link {
   text-decoration: underline;
 }
 
+#showpass {
+  background: #E7E7E7;
+  color: #000;
+}
 
 /* -----------------------------------------
    For login
