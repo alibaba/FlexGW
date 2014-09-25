@@ -67,6 +67,8 @@ def settings():
             return redirect(url_for('dial.settings'))
     if settings:
         form.subnet.data = settings.subnet
+        form.c2c.data = settings.c2c
+        form.duplicate.data = settings.duplicate
     return render_template('dial/settings.html', settings=settings, form=form)
 
 

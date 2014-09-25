@@ -30,17 +30,21 @@ class VpnConfig(object):
     def _get_settings(self):
         data = Settings.query.get(1)
         if data:
-            return data.ipool, data.subnet
+            return data
         return None
 
     def _commit_conf_file(self):
-        r_ipool, r_subnet = self._get_settings()
+        r_data = self._get_settings()
+        r_ipool = r_data.ipool
+        r_subnet = r_data.subnet
+        c2c = r_data.c2c
+        duplicate = r_data.duplicate
         ipool = "%s %s" % (r_ipool.split('/')[0].strip(),
                            exchange_maskint(int(r_ipool.split('/')[1].strip())))
         subnets = ["%s %s" % (i.split('/')[0].strip(),
                               exchange_maskint(int(i.split('/')[1].strip())))
                    for i in r_subnet.split(',')]
-        data = render_template(self.conf_template, ipool=ipool, subnets=subnets)
+        data = render_template(self.conf_template, ipool=ipool, subnets=subnets, c2c=c2c, duplicate=duplicate)
         try:
             with open(self.conf_file, 'w') as f:
                 f.write(data)
@@ -59,16 +63,19 @@ class VpnConfig(object):
         db.session.commit()
         return True
 
-    def update_settings(self, ipool, subnet):
+    def update_settings(self, ipool, subnet, c2c, duplicate):
+        choice = {"yes": True, "no": False}
         subnet_list = [i.strip() for i in subnet.split(',')]
         subnet = ','.join(subnet_list)
         settings = Settings.query.get(1)
         if settings is None:
-            settings = Settings(ipool, subnet)
+            settings = Settings(ipool, subnet, choice[c2c], choice[duplicate])
             db.session.add(settings)
         else:
             settings.ipool = ipool
             settings.subnet = subnet
+            settings.c2c = choice[c2c]
+            settings.duplicate = choice[duplicate]
         db.session.commit()
         return True
 
@@ -228,6 +235,9 @@ def account_del(id):
 def settings_update(form):
     account = VpnConfig()
     vpn = VpnServer()
-    if account.update_settings(form.ipool.data, form.subnet.data) and vpn.reload:
+    if account.update_settings(form.ipool.data,
+                               form.subnet.data,
+                               form.c2c.data,
+                               form.duplicate.data) and vpn.reload:
         return True
     return False
