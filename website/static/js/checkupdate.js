@@ -17,6 +17,7 @@
     }
 
     $("#checkupdate").bind('click', function (event) {
+        event.preventDefault();
         $.ajax({
             url: "/api/checkupdate",
             type: "get",
