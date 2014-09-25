@@ -218,6 +218,8 @@ def get_accounts(id=None, status=False):
                         account['bs'] = status['bs']
                         account['ct'] = datetime.fromtimestamp(int(status['ct'])).strftime('%Y-%m-%d %H:%M:%S')
                         result.append(copy.deepcopy(account))
+                else:
+                    result.append(copy.deepcopy(account))
         return sorted(result or accounts, key=lambda x: x.get('rip'), reverse=True)
     return None
 
