@@ -7,6 +7,7 @@
 """
 
 
+import copy
 from datetime import datetime
 
 from flask import render_template, flash
@@ -175,6 +176,7 @@ class VpnServer(object):
         return self._exec(cmd)
 
     def account_status(self, account_name):
+        result = []
         if not self.status:
             return False
         try:
@@ -185,15 +187,16 @@ class VpnServer(object):
         for line in raw_data:
             if line.startswith('CLIENT_LIST,%s,' % account_name):
                 data = line.split(',')
-                return {'rip': '%s' % data[2], 'vip': '%s' % data[3],
-                        'br': data[4], 'bs': data[5], 'ct': data[7]}
-        return False
+                result.append({'rip': '%s' % data[2], 'vip': '%s' % data[3],
+                              'br': data[4], 'bs': data[5], 'ct': data[7]})
+        return result or False
 
     def tunnel_traffic(self, tunnel_name):
         pass
 
 
 def get_accounts(id=None, status=False):
+    result = []
     if id:
         data = Account.query.filter_by(id=id)
     else:
@@ -206,14 +209,18 @@ def get_accounts(id=None, status=False):
         if status:
             vpn = VpnServer()
             for account in accounts:
-                status = vpn.account_status(account['name'])
-                if status:
-                    account['rip'] = status['rip'].split(':')[0]
-                    account['vip'] = status['vip']
-                    account['br'] = status['br']
-                    account['bs'] = status['bs']
-                    account['ct'] = datetime.fromtimestamp(int(status['ct'])).strftime('%Y-%m-%d %H:%M:%S')
-        return sorted(accounts, key=lambda x: x.get('rip'), reverse=True)
+                statuses = vpn.account_status(account['name'])
+                if statuses:
+                    for status in statuses:
+                        account['rip'] = status['rip'].split(':')[0]
+                        account['vip'] = status['vip']
+                        account['br'] = status['br']
+                        account['bs'] = status['bs']
+                        account['ct'] = datetime.fromtimestamp(int(status['ct'])).strftime('%Y-%m-%d %H:%M:%S')
+                        result.append(copy.deepcopy(account))
+        else:
+            result = accounts
+        return sorted(result, key=lambda x: x.get('rip'), reverse=True)
     return None
 
 
