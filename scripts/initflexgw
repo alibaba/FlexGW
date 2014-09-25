@@ -1,0 +1,26 @@
+#!/bin/bash
+
+function doit {
+    # build cert.
+    cd /usr/local/flexgw/scripts
+    ./cert-build
+    cd /usr/local/flexgw/scripts/keys
+    cp -fv ca.crt server.crt server.key dh1024.pem /etc/openvpn/
+    cp -fv ca.crt server.crt server.key /usr/local/flexgw/instance/
+    # init strongswan & openvpn config files.
+    cp -fv /usr/local/flexgw/rc/strongswan.conf /etc/strongswan/strongswan.conf
+    cp -fv /usr/local/flexgw/rc/openvpn.conf /etc/openvpn/server.conf
+    # packaging openvpn client config files.
+    cd /usr/local/flexgw/website/vpn/dial/static
+    zip -qj windows-openvpn-client.zip /etc/openvpn/ca.crt /usr/local/flexgw/rc/openvpn-client.ovpn
+    tar -czvf linux-openvpn-client.tar.gz -C /etc/openvpn ca.crt -C /usr/local/flexgw/rc openvpn-client.conf
+    # setting flask website SECRET_KEY
+    echo "SECRET_KEY = '$(head -c 32 /dev/urandom | base64 | head -c 32)'" >> /usr/local/flexgw/instance/application.cfg
+    # set auto start
+    chkconfig flexgw on
+    # starting website
+    /etc/init.d/flexgw start
+}
+
+doit 1>/dev/null 2>&1 &
+rm -rf /etc/rc3.d/S98initflexgw

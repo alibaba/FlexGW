@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block title %}Docs{% endblock %}
+
+{% block trail %}
+        <li><a href="/">Home</a></li>
+        <li>Docs</li>
+        <li class="current"><a href="{{ url_for('docs.dial') }}">拨号VPN</a></li>
+{% endblock trail %}
+
+{% block content %}
+    {% include "docs/sidenav.html" %}
+
+    <!-- start of issue table -->
+    <div class="large-10 columns">
+      <div class="row">
+        <div class="large-12 columns">
+          <div class="panel">
+            <h3>拨号 VPN 使用指南</h3>
+            <hr />
+            <img src="{{ url_for('docs.static', filename='img/dial_01.png') }}">
+            <p>如上图所示，管理员想接入VPC2 的私网内，以便管理维护VM1和VM2。其中，VPC2 中有一台使用VPN/SNAT 镜像安装的GateWay VM，并绑定了EIP。<br />
+            本例：管理员从公网通过VPN 隧道访问VPC2 的192.168.0.3 。</p>
+            <h5>第一、启动拨号VPN 服务</h5>
+            <hr />
+            <p>进入拨号VPN 的「VPN 服务管理」页面，确保VPC 的GateWay VM启动了拨号VPN 服务。</p>
+            <img src="{{ url_for('docs.static', filename='img/dial_02.png') }}">
+            <ul>
+              <li>启动VPN 服务：仅启动本机的拨号VPN。</li>
+              <li>停止VPN 服务：停止本机的拨号VPN。已经连接上的隧道将全部断开。</li>
+              <li>配置下发&amp;重载：进行拨号VPN 「设置」时，该动作会自动进行。但某些情况下，如果你想重新生成VPN 服务端配置，可手动执行该操作。</li>
+            </ul>
+            <h5>第二、设置</h5>
+            <hr />
+            <img src="{{ url_for('docs.static', filename='img/dial_03.png') }}">
+            <ul>
+              <li>虚拟IP 地址池：即VPN Server 分配给客户端的虚拟IP 地址池。</li>
+              <li>子网网段：即我们VPC2 的子网192.168.0.0/24。</li>
+            </ul>
+            <h5>第三、配置SNAT</h5>
+            <hr />
+            <p>进行拨号VPN「设置」之后，为了让管理员能够访问VPC2 的私网，需要手工调整相应的SNAT 设置！</p>
+            <img src="{{ url_for('docs.static', filename='img/dial_04.png') }}">
+            <p>在上面的例子中，虚拟地址池为10.8.0.0/24，子网网段为192.168.0.0/24，则需要配置SNAT: 10.8.0.0/24 ➔ 192.168.0.1 </p>
+            <h5>第四、添加拨号VPN 账号</h5>
+            <hr />
+            <p>点击「新增账号」按钮，即可新增账号：</p>
+            <img src="{{ url_for('docs.static', filename='img/dial_05.png') }}">
+            <ul>
+              <li>账号名：只可包含如下字符：数字、字母、下划线。</li>
+              <li>密码：只可包含如下字符：数字、字母、下划线。密码以明文方式保存和显示，以让系统管理员可随时查看和修改。</li>
+            </ul>
+            <h5>第五、查看账号列表</h5>
+            <hr />
+            <p>点击「账号列表」按钮，可以查看已经添加的账号列表。如果该账号已经拨入VPN，将看到更明细的信息：</p>
+            <img src="{{ url_for('docs.static', filename='img/dial_06.png') }}">
+            <ul>
+              <li>状态：由于VPN 的keepalive 机制，会有1分钟左右的延时。</li>
+            </ul>
+
+            <h5>第六、配置客户端</h5>
+            <hr />
+            <p>点击「客户端下载」按钮，可以下载VPN 客户端和相应的配置文件。</p>
+            <img src="{{ url_for('docs.static', filename='img/dial_07.png') }}">
+            <ul>
+              <li>修改配置文件：将配置文件中的「remote IP」字段修改为GateWay VM 的EIP 地址。</li>
+              <li>Windows 平台：安装完客户端后，将配置文件client.ovpn和ca.crt 文件放到安装目录下的config 文件夹中。然后启动openvpn-gui.exe，根据提示进行连接。</li>
+              <li>Linux 平台：在配置文件client.conf 和ca.crt 的目录下执行命令：openvpn client.conf，根据提示进行连接。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of issue table -->
+{% endblock content %}

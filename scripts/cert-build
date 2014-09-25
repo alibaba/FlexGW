@@ -1,0 +1,79 @@
+#!/bin/bash
+
+#DIR
+export HOME_DIR="$(pwd)"
+export KEY_DIR="$HOME_DIR/keys"
+export KEY_CONFIG="$HOME_DIR/openssl-1.0.0.cnf"
+
+
+#COMMAND
+export OPENSSL="openssl"
+export PKCS11TOOL="pkcs11-tool"
+export GREP="grep"
+
+#PARAMS
+export PKCS11_MODULE_PATH="dummy"
+export PKCS11_PIN="dummy"
+
+export KEY_SIZE=1024
+
+# In how many days should the root CA key expire?
+export CA_EXPIRE=3650
+
+# In how many days should certificates expire?
+export KEY_EXPIRE=3650
+
+# These are the default values for fields
+# which will be placed in the certificate.
+# Don't leave any of these fields blank.
+export KEY_COUNTRY="CN"
+export KEY_PROVINCE="ZJ"
+export KEY_CITY="HZ"
+export KEY_ORG="Flex GateWay"
+export KEY_EMAIL="me@myhost.mydomain"
+export KEY_OU="Flex GateWay"
+
+# X509 Subject Field
+export KEY_NAME="Flex GateWay"
+export KEY_CN='Flex GateWay CA'
+
+
+#
+#create dir:
+#
+
+if [ "$KEY_DIR" ]; then
+    rm -rf "$KEY_DIR"
+    mkdir "$KEY_DIR" && \
+    	chmod go-rwx "$KEY_DIR" && \
+    	touch "$KEY_DIR/index.txt" && \
+    	echo "$(dmidecode -s system-uuid)" >"$KEY_DIR/serial"
+fi
+
+#
+#create ca
+#
+
+cd ${KEY_DIR}
+
+$OPENSSL req -batch -days $CA_EXPIRE -nodes -new -newkey rsa:$KEY_SIZE -x509 -keyout ca.key -out ca.crt -config "$KEY_CONFIG" && chmod 0600 ca.key
+
+
+#
+#create dh-param
+#
+
+$OPENSSL dhparam -out ${KEY_DIR}/dh${KEY_SIZE}.pem ${KEY_SIZE}
+
+#
+#create server certificate
+#
+
+export KEY_CN="$(hostname)"
+
+
+$OPENSSL req -batch -nodes -new -newkey rsa:$KEY_SIZE -keyout server.key -out server.csr -extensions server -config "$KEY_CONFIG"
+
+$OPENSSL ca -batch -days $KEY_EXPIRE -out server.crt -in server.csr -extensions server -config "$KEY_CONFIG"
+
+chmod 0600 server.key

@@ -4,45 +4,30 @@
     ~~~~~~~~~~~~~~~~~~~~~~
 
     account system models.
-
-    :copyright: (c) 2014 by xiong.xiaox(xiong.xiaox@alibaba-inc.com).
 """
 
 
-import string
+from simplepam import authenticate
 
-from datetime import datetime
+from flask import current_app
 
-from werkzeug import cached_property
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask.ext.principal import Permission, RoleNeed, UserNeed
-
-from website import db
+from website.services import exec_command
 
 
-class User(db.Model):
-    _member = 1
-    _master = 0
+class User(object):
 
-    _pass_seed = string.ascii_letters + string.digits + '!@#$%^&*()'
+    id = None
+    username = None
 
-    id = db.Column(db.Integer, primary_key=True)
-    account = db.Column(db.String(80), unique=True, index=True)
-    password = db.Column(db.String(80))
-    role = db.Column(db.Integer, default=0)
-    enabled = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime)
-
-    def __init__(self, account, password, created_at=datetime.now()):
-        self.account = account
-        self.password = generate_password_hash(password, method='sha1', salt_length=7)
-        self.created_at = created_at
+    def __init__(self, id, username):
+        self.id = id
+        self.username = username
 
     def __repr__(self):
-        return '<User {0}:{1}:{2}>'.format(self.account, self.role, self.created_at)
+        return '<User {0}:{1}>'.format(self.id, self.username)
 
     def is_active(self):
-        return self.enabled
+        return True
 
     def is_authenticated(self):
         return True
@@ -50,39 +35,37 @@ class User(db.Model):
     def is_anonymous(self):
         return False
 
-    def owner_permission(self):
-        return Permission(UserNeed(self.account))
-
     def get_id(self):
         return unicode(self.id)
 
-    def check_password(self, pw):
-        return check_password_hash(self.password, pw)
+    @classmethod
+    def query_filter_by(cls, id=None, username=None):
+        if id:
+            cmd = ['getent', 'passwd', str(id)]
+        elif username:
+            cmd = ['id', '-u', str(username)]
+        else:
+            return None
+        try:
+            r = exec_command(cmd)
+        except:
+            current_app.logger.error('[Account System]: exec_command error: %s', cmd)
+            return None
+        if r['return_code'] != 0:
+            current_app.logger.error('[Account System]: exec_command return: %s:%s',
+                                     cmd, r['return_code'])
+            return None
+        if id:
+            username = r['stdout'].split(':')[0]
+            return cls(id, username)
+        if username:
+            id = int(r['stdout'])
+            return cls(id, username)
 
-    def update_password(self, pw):
-        self.password = generate_password_hash(pw, method='sha1', salt_length=7)
-        db.session.commit()
-        return True
-
-    @cached_property
-    def master_permission(self):
-        return Permission(RoleNeed('master'))
-
-    @cached_property
-    def member_permission(self):
-        return Permission(RoleNeed('member'))
-
-    @property
-    def is_member(self):
-        return self.role == self._member
-
-    @property
-    def is_master(self):
-        return self.role == self._master
-
-    @property
-    def roles(self):
-        if self.is_master:
-            return ['member', 'master']
-        elif self.is_member:
-            return ['member']
+    @classmethod
+    def check_auth(cls, username, password):
+        r = authenticate(str(username), str(password), service='sshd')
+        if not r:
+            current_app.logger.error('[Account System]: pam auth failed return: %s',
+                                     r)
+        return r

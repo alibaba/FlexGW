@@ -1,0 +1,19 @@
+    <!-- start of side-nav -->
+    <div id="side-nav" class="large-2 columns">
+      {% set side_bar = [
+        ('docs.index', 'list', '介绍'),
+        ('docs.ipsec', 'list', 'IPSec VPN'),
+        ('docs.dial', 'list', '拨号VPN'),
+        ('docs.snat', 'list', 'SNAT使用'),
+        ('docs.certificate', 'list', '关于VPN 证书'),
+        ('docs.debug', 'list', '问题排查'),
+        ('docs.update', 'list', '升级指南'),
+        ('docs.changelog', 'list', 'ChangeLog')
+      ] -%}
+      <ul class="side-nav">
+        {% for endpoint, icon, caption in side_bar %}
+          <li{% if request.endpoint == endpoint %} class="active" {% endif %}><a href="{{ url_for(endpoint) }}"><i class="fi-{{ icon }}"> </i>{{ caption }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <!-- end of side-nav -->

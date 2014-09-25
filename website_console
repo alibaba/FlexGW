@@ -1,0 +1,92 @@
+#!/bin/bash
+#########################################################################
+# chkconfig: - 96 48
+# description: this is script can start/stop/restart website
+#########################################################################
+
+
+script_home="/usr/local/flexgw"
+website_prog="/usr/local/flexgw/pyenv/versions/2.7.6/bin/gunicorn"
+website_gunicorn_etc="$script_home/gunicorn.py"
+website_app="website:app"
+website_pid="$script_home/website.pid"
+
+status()
+{
+    if [ -f $website_pid ]; then
+        website_pid=$(cat $website_pid)
+    else
+        echo $"not found website pid file, seems not running?"
+        return 2
+    fi
+
+    if (kill -0 $website_pid > /dev/null 2>&1); then
+        echo $"website is running"
+        return 0
+    else
+        echo $"website is not running"
+        return 1
+    fi
+}
+
+reload()
+{
+    status
+    if [ $? -eq 0 ]; then
+        kill -s SIGHUP $website_pid
+        if [ $? -eq 0 ]; then
+            echo $"website reload ok"
+        else
+            echo $"website reload failed"
+        fi
+    fi
+}
+
+stop()
+{
+    status
+    if [ $? -eq 0 ]; then
+        kill -s SIGTERM $website_pid
+        if [ $? -eq 0 ]; then
+            echo $"website stop ok"
+        else
+            echo $"website stop failed"
+        fi
+        sleep 2
+        status
+    fi
+}
+
+start()
+{
+    status
+    if [ $? -ne 0 ]; then
+        echo $"starting website..."
+        $website_prog -D -c $website_gunicorn_etc $website_app --pythonpath $script_home
+        sleep 2
+        status
+    fi
+}
+
+case "$1" in
+    start)
+      start
+      ;;
+    stop)
+      stop
+      ;;
+    restart)
+      stop
+      start
+      ;;
+    reload)
+      reload
+      ;;
+    status)
+      status
+      ;;
+    *)
+      echo $"Usage: $0 {start|stop|restart|reload|status}"
+      exit 1
+esac
+exit $?
