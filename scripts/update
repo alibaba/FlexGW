@@ -190,6 +190,13 @@ upgrade() {
     exit 1
   } >&2
   popd >&4
+  cp "$WEBSITE_PATH/instance/website.db" "$WEBSITE_PATH/instance/website.db.$SEED" &&
+  $WEBSITE_PATH/scripts/db-manage.py db upgrade --directory "$WEBSITE_PATH/scripts/migrations" ||
+  { echo "error: upgrade db failed."
+    echo "backup db is: $WEBSITE_PATH/instance/website.db.$SEED"
+    exit 1
+  } > &2
+  echo "Upgrade Done!"
 }
 
 check() {
@@ -251,6 +258,7 @@ fi
 SEED="$(date "+%Y%m%d%H%M%S").$$"
 DOWNLOAD_PATH="${TMP}/flexgw-update.${SEED}"
 LOG_PATH="${TMP}/flexgw-update.${SEED}.log"
+WEBSITE_PATH="/usr/local/flexgw"
 
 exec 4<> "$LOG_PATH" # open the log file at fd 4
 
