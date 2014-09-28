@@ -49,6 +49,18 @@ cp -fv %{_builddir}/%{name}-%{version}/website_console %{buildroot}/etc/init.d/f
 cp -rv %{_builddir}/%{name}-%{version}/* %{buildroot}/usr/local/flexgw/
 cp -rv %{pyenv_build_dir}/pyenv/* %{buildroot}/usr/local/flexgw/pyenv/
 
+%post
+# db migrate
+if [ $1 -ne 1 ]; then
+    SEED="$(date +%%Y%%m%%d%%H%%M%%S)"
+    cp -fv "/usr/local/flexgw/instance/website.db" "/usr/local/flexgw/instance/website.db.${SEED}" &&
+    /usr/local/flexgw/scripts/db-manage.py db upgrade --directory "/usr/local/flexgw/scripts/migrations" 1>/dev/null 2>&1 ||
+    { echo "error: upgrade db failed."
+      echo "backup db is: /usr/local/flexgw/instance/website.db.${SEED}"
+      exit 1
+    } >&2
+fi
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 rm -rf ${_builddir}
