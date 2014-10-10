@@ -37,6 +37,8 @@ cd "$static_dir" 2>/dev/null || {
     exit 1
 } >&2
 
+sed -e 's/$/\r/' /usr/local/flexgw/rc/openvpn-client.conf > /usr/local/flexgw/rc/openvpn-client.ovpn
+
 command="$1"
 case "$command" in
 "" | "-h" | "--help" )

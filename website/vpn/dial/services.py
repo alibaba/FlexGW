@@ -21,8 +21,10 @@ from website.vpn.dial.helpers import exchange_maskint
 class VpnConfig(object):
     ''' read and set config for vpn config file.'''
     conf_file = '/etc/openvpn/server.conf'
+    client_conf_file = '/usr/local/flexgw/rc/openvpn-client.conf'
 
     conf_template = 'dial/server.conf'
+    client_conf_template = 'dial/client.conf'
 
     def __init__(self, conf_file=None):
         if conf_file:
@@ -46,11 +48,14 @@ class VpnConfig(object):
         subnets = ["%s %s" % (i.split('/')[0].strip(),
                               exchange_maskint(int(i.split('/')[1].strip())))
                    for i in r_subnet.split(',')]
-        data = render_template(self.conf_template, ipool=ipool, subnets=subnets,
-                               c2c=c2c, duplicate=duplicate, proto=proto)
+        server_data = render_template(self.conf_template, ipool=ipool, subnets=subnets,
+                                      c2c=c2c, duplicate=duplicate, proto=proto)
+        client_data = render_template(self.client_conf_template, proto=proto)
         try:
             with open(self.conf_file, 'w') as f:
-                f.write(data)
+                f.write(server_data)
+            with open(self.client_conf_file, 'w') as f:
+                f.write(client_data)
         except:
             return False
         return True
@@ -135,6 +140,11 @@ class VpnServer(object):
         message = u"VPN 服务重载失败！%s"
         return self._exec(cmd, message)
 
+    def _package_client_conf(self):
+        cmd = ['/usr/local/flexgw/scripts/packconfig', 'all']
+        message = u"客户端配置文件打包失败！"
+        return self._exec(cmd, message)
+
     @property
     def start(self):
         if self.status:
@@ -160,6 +170,7 @@ class VpnServer(object):
             message = u'VPN 服务配置文件修改失败，请重试！'
             flash(message, 'alert')
             return False
+        self._package_client_conf()
         if not self.status:
             flash(u'设置成功！VPN 服务未启动，请通过「VPN服务管理」启动VPN 服务。', 'alert')
             return False
