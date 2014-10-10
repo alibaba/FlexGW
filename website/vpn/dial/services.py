@@ -38,6 +38,7 @@ class VpnConfig(object):
         r_data = self._get_settings()
         r_ipool = r_data.ipool
         r_subnet = r_data.subnet
+        proto = r_data.proto
         c2c = r_data.c2c
         duplicate = r_data.duplicate
         ipool = "%s %s" % (r_ipool.split('/')[0].strip(),
@@ -45,7 +46,8 @@ class VpnConfig(object):
         subnets = ["%s %s" % (i.split('/')[0].strip(),
                               exchange_maskint(int(i.split('/')[1].strip())))
                    for i in r_subnet.split(',')]
-        data = render_template(self.conf_template, ipool=ipool, subnets=subnets, c2c=c2c, duplicate=duplicate)
+        data = render_template(self.conf_template, ipool=ipool, subnets=subnets,
+                               c2c=c2c, duplicate=duplicate, proto=proto)
         try:
             with open(self.conf_file, 'w') as f:
                 f.write(data)
@@ -64,19 +66,22 @@ class VpnConfig(object):
         db.session.commit()
         return True
 
-    def update_settings(self, ipool, subnet, c2c, duplicate):
+    def update_settings(self, ipool, subnet, c2c, duplicate, proto):
         choice = {"yes": True, "no": False}
+        proto_type = {"tcp": "tcp", "udp": "udp"}
         subnet_list = [i.strip() for i in subnet.split(',')]
         subnet = ','.join(subnet_list)
         settings = Settings.query.get(1)
         if settings is None:
-            settings = Settings(ipool, subnet, choice[c2c], choice[duplicate])
+            settings = Settings(ipool, subnet, choice[c2c], choice[duplicate],
+                                proto_type.get(proto, 'udp'))
             db.session.add(settings)
         else:
             settings.ipool = ipool
             settings.subnet = subnet
             settings.c2c = choice[c2c]
             settings.duplicate = choice[duplicate]
+            settings.proto = proto_type.get(proto, 'udp')
         db.session.commit()
         return True
 
@@ -245,6 +250,7 @@ def settings_update(form):
     if account.update_settings(form.ipool.data,
                                form.subnet.data,
                                form.c2c.data,
-                               form.duplicate.data) and vpn.reload:
+                               form.duplicate.data,
+                               form.proto.data) and vpn.reload:
         return True
     return False

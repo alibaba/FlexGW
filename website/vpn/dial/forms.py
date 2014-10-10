@@ -75,6 +75,8 @@ class SettingsForm(Form):
                       choices=[('yes', u'是'), ('no', u'否')])
     duplicate = SelectField(u'允许单个账号同时在线',
                             choices=[('yes', u'是'), ('no', u'否')])
+    proto = SelectField(u'通信协议',
+                        choices=[('udp', u'UDP'), ('tcp', u'TCP')])
 
 
 class ConsoleForm(Form):

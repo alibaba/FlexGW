@@ -29,6 +29,15 @@
       <form method="POST" action="{{ url_for('dial.settings') }}">
         <div class="row">
           <div class="large-3 columns">
+            {{ form.proto.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {{ form.proto }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-3 columns">
             {{ form.ipool.label(class="right inline") }}
           </div>
           <div class="large-5 columns end">
