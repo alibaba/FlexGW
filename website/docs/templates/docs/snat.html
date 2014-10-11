@@ -26,8 +26,8 @@
             <p>进入SNAT 的「SNAT 新增」页面：</p>
             <img src="{{ url_for('docs.static', filename='img/snat_02.png') }}">
             <ul>
-              <li>SNAT源IP（段）：为VPC1 中需要访问公网的私网网段。本例中为：172.16.0.0/24</li>
-              <li>SNAT转发IP：为VPC1 中GateWay VM 的私网IP，而非EIP。本例中为：172.16.0.1</li>
+              <li>需转换的源IP（或网段）：为VPC1 中需要访问公网的私网网段。本例中为：172.16.0.0/24</li>
+              <li>转换后的IP：为VPC1 中GateWay VM 的私网IP，而非EIP。本例中为：172.16.0.1</li>
             </ul>
 
             <h5>第二、查看SNAT 列表</h5>
@@ -35,8 +35,8 @@
             <p>新增SNAT 条目之后，会自动跳转到「SNAT 列表」页面，即可看到：</p>
             <img src="{{ url_for('docs.static', filename='img/snat_03.png') }}">
             <ul>
-              <li>转发网络：为VPC1 中需要访问公网的私网网段。本例中为：172.16.0.0/24</li>
-              <li>转发后IP：为VPC1 中GateWay VM 的私网IP，而非EIP。本例中为：172.16.0.1</li>
+              <li>需转换的源IP（或网段）：为VPC1 中需要访问公网的私网网段。本例中为：172.16.0.0/24</li>
+              <li>转换后的IP：为VPC1 中GateWay VM 的私网IP，而非EIP。本例中为：172.16.0.1</li>
               <li>删除：点击「删除」按钮，即可删除该SNAT 条目，且立即生效。</li>
             </ul>
           </div>
