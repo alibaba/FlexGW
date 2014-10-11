@@ -30,7 +30,7 @@
       {% endif %}
       {% endwith %}
       <div data-alert class="alert-box info">
-        注意：「SNAT转发IP」为私网IP，非EIP。
+        注意：「转换后的IP」为本机私网IP，非本机绑定的公网地址或EIP 地址。
       </div>
       <form method='POST' action='/snat/add'>
         <div class="row">
@@ -42,7 +42,7 @@
             {{ form.source(class="error", value=form.source.value) }}
             <small class="error">{{ form.source.errors[0] }}</small>
             {% else %}
-            {{ form.source(placeholder="192.168.0.0/24") }}
+            {{ form.source(placeholder="10.8.8.0/24") }}
             {% endif %}
           </div>
         </div>

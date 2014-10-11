@@ -35,9 +35,9 @@ def IPorNet(message=u"无效的IP 或网段！"):
 
 
 class SnatForm(Form):
-    source = TextField(u'SNAT源IP（段）',
+    source = TextField(u'需转换的源IP（或网段）',
                        validators=[Required(message=u'这是一个必选项！'),
                                    IPorNet(message=u"无效的IP 或网段！")])
-    gateway = TextField(u'SNAT转发IP',
+    gateway = TextField(u'转换后的IP',
                         validators=[Required(message=u'这是一个必选项！'),
                                     IPAddress(message=u'无效的IP 地址！')])
