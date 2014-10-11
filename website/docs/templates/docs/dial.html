@@ -62,7 +62,8 @@
             <ul>
               <li>修改配置文件：将配置文件中的「remote IP」字段修改为GateWay VM 的公网地址。</li>
               <li>Windows 平台：安装完客户端后，将配置文件client.ovpn和ca.crt 文件放到安装目录下的config 文件夹中。然后启动openvpn-gui.exe，根据提示进行连接。</li>
-              <li>Linux 平台：在配置文件client.conf 和ca.crt 的目录下执行命令：openvpn client.conf，根据提示进行连接。</li>
+              <li>Linux 平台：在配置文件client.conf 和ca.crt 的目录下执行命令：openvpn client.conf，根据提示进行连接。若要以daemon 形式在后台执行，请执行：openvpn client.conf & 来建立连接。</li>
+              <li>注：在Linux 平台下载客户端时，需要关闭证书验证。wget 请加上参数--no-check-certificate, curl 请加上参数--insecure。</li>
             </ul>
             <h5>第六、查看账号列表</h5>
             <hr />
