@@ -7,7 +7,9 @@
 """
 
 
-from flask import flash
+import sys
+
+from flask import flash, current_app
 
 from website.services import exec_command
 
@@ -17,10 +19,14 @@ def iptables_get_snat_rules(message=True):
     try:
         r = exec_command(cmd)
     except:
+        current_app.logger.error('[SNAT]: exec_command error: %s:%s', cmd,
+                                 sys.exc_info()[1])
         if message:
             flash(u'iptables 程序异常，无法调用，请排查操作系统相关设置！', 'alert')
         return False
     if r['return_code'] != 0:
+        current_app.logger.error('[SNAT]: exec_command return: %s:%s:%s', cmd,
+                                 r['return_code'], r['stderr'])
         if message:
             message = u"获取规则失败：%s" % r['stderr']
             flash(message, 'alert')
@@ -46,10 +52,19 @@ def iptables_set_snat_rules(method, source, gateway, message=True):
         return False
     #: add rule to iptables
     cmd = 'iptables -t nat %s POSTROUTING -s %s -j SNAT --to-source %s' % (methods[method], source, gateway)
-    r = exec_command(cmd.split())
+    try:
+        r = exec_command(cmd.split())
+    except:
+        current_app.logger.error('[SNAT]: exec_command error: %s:%s', cmd,
+                                 sys.exc_info()[1])
+        if message:
+            flash(u'iptables 程序异常，无法调用，请排查操作系统相关设置！', 'alert')
+        return False
     if r['return_code'] == 0:
         return True
     if message:
         message = u"设置规则失败：%s" % r['stderr']
         flash(message, 'alert')
+    current_app.logger.error('[SNAT]: exec_command return: %s:%s:%s', cmd,
+                             r['return_code'], r['stderr'])
     return False

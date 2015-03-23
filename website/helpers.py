@@ -11,11 +11,11 @@ from flask import request
 
 
 def log_request(sender, **extra):
-    sender.logger.info('Request-Message: %s %s %s',
+    sender.logger.info('[Request Message]: %s %s %s',
                        request.method,
                        request.url,
                        request.data)
 
 
 def log_exception(sender, exception, **extra):
-    sender.logger.error('Exception-Request: %s', exception)
+    sender.logger.error('[Exception Request]: %s', exception)

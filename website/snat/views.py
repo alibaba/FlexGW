@@ -10,7 +10,7 @@
 
 from flask import Blueprint, render_template
 from flask import url_for, redirect, flash
-from flask import request, jsonify
+from flask import request
 
 from flask.ext.login import login_required
 
