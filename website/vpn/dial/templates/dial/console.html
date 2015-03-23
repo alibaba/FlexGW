@@ -35,21 +35,39 @@
             <ul class="pricing-table">
               <li class="title">启动VPN 服务</li>
               <li class="description">启动VPN 服务。不会影响到已经运行的VPN 服务。</li>
-              <li class="cta-button">{{ form.start(class="alert tiny button") }}</li>
+              <li class="cta-button">
+              {% if status %}
+              {{ form.start(class="alert tiny button disabled", disabled="disabled") }}
+              {% else %}
+              {{ form.start(class="alert tiny button") }}
+              {% endif %}
+              </li>
             </ul>
           </div>
           <div class="large-3 columns">
             <ul class="pricing-table">
               <li class="title">停止VPN 服务</li>
               <li class="description">停止VPN 服务。服务停止之后，所有已经连接的隧道都将中断。</li>
-              <li class="cta-button">{{ form.stop(class="alert tiny button") }}</li>
+              <li class="cta-button">
+              {% if status %}
+              {{ form.stop(class="alert tiny button") }}
+              {% else %}
+              {{ form.stop(class="alert tiny button disabled", disabled="disabled") }}
+              {% endif %}
+              </li>
             </ul>
           </div>
           <div class="large-3 columns end">
             <ul class="pricing-table">
               <li class="title">配置下发&重载</li>
               <li class="description">下发新的VPN 配置，并使之生效。建议在修改VPN 配置之后再进行使用。</li>
-              <li class="cta-button">{{ form.re_load(class="alert tiny button") }}</li>
+              <li class="cta-button">
+              {% if status %}
+              {{ form.re_load(class="alert tiny button") }}
+              {% else %}
+              {{ form.re_load(class="alert tiny button disabled", disabled="disabled") }}
+              {% endif %}
+              </li>
             </ul>
           </div>
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />

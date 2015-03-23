@@ -17,6 +17,67 @@
           <div class="panel">
             <h3>拨号 VPN 使用指南</h3>
             <hr />
+            <h5>应用场景：</h5>
+            <ol>
+              <li>Classic 网络场景。跨账号、跨地域的云服务器之间内网互通。</li>
+              <li>VPC 网络场景。管理员接入VPC 进行私网访问、管理。</li>
+            </ol>
+
+            <h3>Classic 网络场景</h3>
+            <hr />
+            <img src="{{ url_for('docs.static', filename='img/dial_08.png') }}">
+            <p>如上图所示，用户在杭州、北京、青岛区域用不同的账号各买了1台ECS VM，现在想让这3台VM 之间进行内网通信，我们需要把这3台VM 拨入到同一个VPN 网络中，用VPN 分配的地址进行通信。<br />
+            本例：杭州的VM 选为VPN GateWay，北京和青岛的VM 拨入到杭州的VPN 中。使用VPN 分配的地址10.8.8.7、10.8.8.9 进行相互通信。</p>
+            <h5>第一、启动拨号VPN 服务</h5>
+            <hr />
+            <p>进入拨号VPN 的「VPN 服务管理」页面，确保GateWay VM启动了拨号VPN 服务。</p>
+            <img src="{{ url_for('docs.static', filename='img/dial_02.png') }}">
+            <ul>
+              <li>启动VPN 服务：仅启动本机的拨号VPN。</li>
+              <li>停止VPN 服务：停止本机的拨号VPN。已经连接上的隧道将全部断开。</li>
+              <li>配置下发&amp;重载：进行拨号VPN 「设置」时，该动作会自动进行。但某些情况下，如果你想重新生成VPN 服务端配置，可手动执行该操作。</li>
+            </ul>
+            <h5>第二、设置</h5>
+            <hr />
+            <img src="{{ url_for('docs.static', filename='img/dial_09.png') }}">
+            <ul>
+              <li>通信协议：可选"UDP"、"TCP"。注：每次修改保存后，请重新下载客户端配置文件。</li>
+              <li>虚拟IP 地址池：即VPN Server 分配给客户端的虚拟IP 地址池。本例为：10.8.8.0/24</li>
+              <li>允许client 间通信：本例子中，这里请选“是”。</li>
+              <li>允许单个账号同时在线：可选“是”或“否”。</li>
+              <li>子网网段：即允许拨号client 访问的子网。本例不需要client 访问子网，填写VPN GateWay VM 私网IP 即可：10.171.112.120/32。</li>
+            </ul>
+            <h5>第四、添加拨号VPN 账号</h5>
+            <hr />
+            <p>点击「新增账号」按钮，即可新增账号：</p>
+            <img src="{{ url_for('docs.static', filename='img/dial_05.png') }}">
+            <ul>
+              <li>账号名：只可包含如下字符：数字、字母、下划线。</li>
+              <li>密码：只可包含如下字符：数字、字母、下划线。</li>
+            </ul>
+            <h5>第五、配置客户端</h5>
+            <hr />
+            <p>点击「客户端下载」按钮，可以下载VPN 客户端和相应的配置文件。</p>
+            <img src="{{ url_for('docs.static', filename='img/dial_07.png') }}">
+            <ul>
+              <li>修改配置文件：将配置文件中的「remote IP」字段修改为GateWay VM 的公网地址。</li>
+              <li>Windows 平台：安装完客户端后，将配置文件client.ovpn和ca.crt 文件放到安装目录下的config 文件夹中。然后启动openvpn-gui.exe，根据提示进行连接。</li>
+              <li>Linux 平台：在配置文件client.conf 和ca.crt 的目录下执行命令：openvpn client.conf，根据提示进行连接。若要以daemon 形式在后台执行，请执行：openvpn client.conf & 来建立连接。</li>
+              <li>注：在Linux 平台下载客户端时，需要关闭证书验证。wget 请加上参数--no-check-certificate, curl 请加上参数--insecure。</li>
+            </ul>
+            <h5>第六、查看账号列表</h5>
+            <hr />
+            <p>点击「账号列表」按钮，可以查看已经添加的账号列表。如果该账号已经拨入VPN，将看到更明细的信息：</p>
+            <img src="{{ url_for('docs.static', filename='img/dial_10.png') }}">
+            <ul>
+              <li>状态：由于VPN 的keepalive 机制，会有1分钟左右的延时。</li>
+            </ul>
+            <h5>第七、使用VPN IP 进行通信</h5>
+            <hr />
+            <p>现在，即可使用VPN 分配的地址10.8.8.7、10.8.8.9 进行相互通信了。</p>
+
+            <h3>VPC 网络场景</h3>
+            <hr />
             <img src="{{ url_for('docs.static', filename='img/dial_01.png') }}">
             <p>如上图所示，管理员想接入VPC2 的私网内，以便管理维护VM1和VM2。其中，VPC2 中有一台使用VPN/SNAT 镜像安装的GateWay VM，并绑定了EIP。<br />
             本例：管理员从公网通过VPN 隧道访问VPC2 的192.168.0.3 。</p>
@@ -33,7 +94,10 @@
             <hr />
             <img src="{{ url_for('docs.static', filename='img/dial_03.png') }}">
             <ul>
+              <li>通信协议：可选"UDP"、"TCP"。注：每次修改保存后，请重新下载客户端配置文件。</li>
               <li>虚拟IP 地址池：即VPN Server 分配给客户端的虚拟IP 地址池。</li>
+              <li>允许client 间通信：可“是”或“否”。</li>
+              <li>允许单个账号同时在线：可选“是”或“否”。</li>
               <li>子网网段：即我们VPC2 的子网192.168.0.0/24。</li>
             </ul>
             <h5>第三、配置SNAT</h5>
@@ -47,17 +111,9 @@
             <img src="{{ url_for('docs.static', filename='img/dial_05.png') }}">
             <ul>
               <li>账号名：只可包含如下字符：数字、字母、下划线。</li>
-              <li>密码：只可包含如下字符：数字、字母、下划线。密码以明文方式保存和显示，以让系统管理员可随时查看和修改。</li>
+              <li>密码：只可包含如下字符：数字、字母、下划线。</li>
             </ul>
-            <h5>第五、查看账号列表</h5>
-            <hr />
-            <p>点击「账号列表」按钮，可以查看已经添加的账号列表。如果该账号已经拨入VPN，将看到更明细的信息：</p>
-            <img src="{{ url_for('docs.static', filename='img/dial_06.png') }}">
-            <ul>
-              <li>状态：由于VPN 的keepalive 机制，会有1分钟左右的延时。</li>
-            </ul>
-
-            <h5>第六、配置客户端</h5>
+            <h5>第五、配置客户端</h5>
             <hr />
             <p>点击「客户端下载」按钮，可以下载VPN 客户端和相应的配置文件。</p>
             <img src="{{ url_for('docs.static', filename='img/dial_07.png') }}">
@@ -65,6 +121,13 @@
               <li>修改配置文件：将配置文件中的「remote IP」字段修改为GateWay VM 的EIP 地址。</li>
               <li>Windows 平台：安装完客户端后，将配置文件client.ovpn和ca.crt 文件放到安装目录下的config 文件夹中。然后启动openvpn-gui.exe，根据提示进行连接。</li>
               <li>Linux 平台：在配置文件client.conf 和ca.crt 的目录下执行命令：openvpn client.conf，根据提示进行连接。</li>
+            </ul>
+            <h5>第六、查看账号列表</h5>
+            <hr />
+            <p>点击「账号列表」按钮，可以查看已经添加的账号列表。如果该账号已经拨入VPN，将看到更明细的信息：</p>
+            <img src="{{ url_for('docs.static', filename='img/dial_06.png') }}">
+            <ul>
+              <li>状态：由于VPN 的keepalive 机制，会有1分钟左右的延时。</li>
             </ul>
           </div>
         </div>

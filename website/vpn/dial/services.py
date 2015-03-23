@@ -7,6 +7,7 @@
 """
 
 
+import copy
 from datetime import datetime
 
 from flask import render_template, flash
@@ -20,8 +21,10 @@ from website.vpn.dial.helpers import exchange_maskint
 class VpnConfig(object):
     ''' read and set config for vpn config file.'''
     conf_file = '/etc/openvpn/server.conf'
+    client_conf_file = '/usr/local/flexgw/rc/openvpn-client.conf'
 
     conf_template = 'dial/server.conf'
+    client_conf_template = 'dial/client.conf'
 
     def __init__(self, conf_file=None):
         if conf_file:
@@ -30,20 +33,29 @@ class VpnConfig(object):
     def _get_settings(self):
         data = Settings.query.get(1)
         if data:
-            return data.ipool, data.subnet
+            return data
         return None
 
     def _commit_conf_file(self):
-        r_ipool, r_subnet = self._get_settings()
+        r_data = self._get_settings()
+        r_ipool = r_data.ipool
+        r_subnet = r_data.subnet
+        proto = r_data.proto
+        c2c = r_data.c2c
+        duplicate = r_data.duplicate
         ipool = "%s %s" % (r_ipool.split('/')[0].strip(),
                            exchange_maskint(int(r_ipool.split('/')[1].strip())))
         subnets = ["%s %s" % (i.split('/')[0].strip(),
                               exchange_maskint(int(i.split('/')[1].strip())))
                    for i in r_subnet.split(',')]
-        data = render_template(self.conf_template, ipool=ipool, subnets=subnets)
+        server_data = render_template(self.conf_template, ipool=ipool, subnets=subnets,
+                                      c2c=c2c, duplicate=duplicate, proto=proto)
+        client_data = render_template(self.client_conf_template, proto=proto)
         try:
             with open(self.conf_file, 'w') as f:
-                f.write(data)
+                f.write(server_data)
+            with open(self.client_conf_file, 'w') as f:
+                f.write(client_data)
         except:
             return False
         return True
@@ -59,16 +71,22 @@ class VpnConfig(object):
         db.session.commit()
         return True
 
-    def update_settings(self, ipool, subnet):
+    def update_settings(self, ipool, subnet, c2c, duplicate, proto):
+        choice = {"yes": True, "no": False}
+        proto_type = {"tcp": "tcp", "udp": "udp"}
         subnet_list = [i.strip() for i in subnet.split(',')]
         subnet = ','.join(subnet_list)
         settings = Settings.query.get(1)
         if settings is None:
-            settings = Settings(ipool, subnet)
+            settings = Settings(ipool, subnet, choice[c2c], choice[duplicate],
+                                proto_type.get(proto, 'udp'))
             db.session.add(settings)
         else:
             settings.ipool = ipool
             settings.subnet = subnet
+            settings.c2c = choice[c2c]
+            settings.duplicate = choice[duplicate]
+            settings.proto = proto_type.get(proto, 'udp')
         db.session.commit()
         return True
 
@@ -122,6 +140,11 @@ class VpnServer(object):
         message = u"VPN 服务重载失败！%s"
         return self._exec(cmd, message)
 
+    def _package_client_conf(self):
+        cmd = ['/usr/local/flexgw/scripts/packconfig', 'all']
+        message = u"客户端配置文件打包失败！"
+        return self._exec(cmd, message)
+
     @property
     def start(self):
         if self.status:
@@ -147,6 +170,7 @@ class VpnServer(object):
             message = u'VPN 服务配置文件修改失败，请重试！'
             flash(message, 'alert')
             return False
+        self._package_client_conf()
         if not self.status:
             flash(u'设置成功！VPN 服务未启动，请通过「VPN服务管理」启动VPN 服务。', 'alert')
             return False
@@ -168,6 +192,7 @@ class VpnServer(object):
         return self._exec(cmd)
 
     def account_status(self, account_name):
+        result = []
         if not self.status:
             return False
         try:
@@ -178,15 +203,16 @@ class VpnServer(object):
         for line in raw_data:
             if line.startswith('CLIENT_LIST,%s,' % account_name):
                 data = line.split(',')
-                return {'rip': '%s' % data[2], 'vip': '%s' % data[3],
-                        'br': data[4], 'bs': data[5], 'ct': data[7]}
-        return False
+                result.append({'rip': '%s' % data[2], 'vip': '%s' % data[3],
+                              'br': data[4], 'bs': data[5], 'ct': data[7]})
+        return result or False
 
     def tunnel_traffic(self, tunnel_name):
         pass
 
 
 def get_accounts(id=None, status=False):
+    result = []
     if id:
         data = Account.query.filter_by(id=id)
     else:
@@ -199,14 +225,18 @@ def get_accounts(id=None, status=False):
         if status:
             vpn = VpnServer()
             for account in accounts:
-                status = vpn.account_status(account['name'])
-                if status:
-                    account['rip'] = status['rip'].split(':')[0]
-                    account['vip'] = status['vip']
-                    account['br'] = status['br']
-                    account['bs'] = status['bs']
-                    account['ct'] = datetime.fromtimestamp(int(status['ct'])).strftime('%Y-%m-%d %H:%M:%S')
-        return sorted(accounts, key=lambda x: x.get('rip'), reverse=True)
+                statuses = vpn.account_status(account['name'])
+                if statuses:
+                    for status in statuses:
+                        account['rip'] = status['rip'].split(':')[0]
+                        account['vip'] = status['vip']
+                        account['br'] = status['br']
+                        account['bs'] = status['bs']
+                        account['ct'] = datetime.fromtimestamp(int(status['ct'])).strftime('%Y-%m-%d %H:%M:%S')
+                        result.append(copy.deepcopy(account))
+                else:
+                    result.append(copy.deepcopy(account))
+        return sorted(result or accounts, key=lambda x: x.get('rip'), reverse=True)
     return None
 
 
@@ -228,6 +258,10 @@ def account_del(id):
 def settings_update(form):
     account = VpnConfig()
     vpn = VpnServer()
-    if account.update_settings(form.ipool.data, form.subnet.data) and vpn.reload:
+    if account.update_settings(form.ipool.data,
+                               form.subnet.data,
+                               form.c2c.data,
+                               form.duplicate.data,
+                               form.proto.data) and vpn.reload:
         return True
     return False

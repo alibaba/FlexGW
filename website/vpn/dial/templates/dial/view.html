@@ -44,12 +44,19 @@
             {{ form.password.label(class="right inline") }}
           </div>
           <div class="large-5 columns end">
-            {% if form.password.errors %}
-            {{ form.password(class="error", value=form.password.value) }}
-            <small class="error">{{ form.password.errors[0] }}</small>
-            {% else %}
-            {{ form.password(value=account.password) }}
-            {% endif %}
+            <div class="row collapse postfix-round">
+              <div class="small-9 columns">
+                {% if form.password.errors %}
+                {{ form.password(class="error", type="password", value=form.password.value) }}
+                <small class="error">{{ form.password.errors[0] }}</small>
+                {% else %}
+                {{ form.password(type="password", value=account.password) }}
+                {% endif %}
+              </div>
+              <div class="small-3 columns">
+                <a href="#" id="showpass" class="postfix button">显示密码</a>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -66,4 +73,8 @@
     </div>
     <!-- end of vpn table -->
 {% endblock content %}
+
+{% block jsplugin %}
+<script src="{{ url_for('static', filename='js/vpnview.js') }}"></script>
+{% endblock jsplugin %}
 

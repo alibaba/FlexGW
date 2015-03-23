@@ -20,10 +20,21 @@
             <p>本程序提供了VPN、SNAT 基础服务。</p>
             <h5>主要提供以下几点功能：</h5>
             <ol>
-              <li>IPSec Site-to-Site 功能。可快速的帮助你将两个不同的VPC 私网以IPSec Site-to-Site 的方式连接起来。</li>
-              <li>拨号VPN 功能。可让你通过拨号方式，接入VPC 私网，进行日常维护管理。</li>
-              <li>SNAT 功能。可方便的设置Source NAT，以让VPC 私网内的VM 通过Gateway VM 访问外网。</li>
+              <li>IPSec Site-to-Site 功能。可快速的帮助你将两个不同的ECS 私网以IPSec Site-to-Site 的方式连接起来。</li>
+              <li>拨号VPN 功能。可让你通过拨号方式，接入ECS 私网，进行日常维护管理。</li>
+              <li>SNAT 功能。可方便的设置Source NAT，以让ECS 私网内的VM 通过Gateway VM 访问外网。</li>
             </ol>
+            <h5>典型的应用场景包括：</h5>
+            <ol>
+              <li>VPC 用户通过VPN 将云上环境和用户侧网络打通(Site-to-Site)。</li>
+              <li>同一用户名下多个VPC(包括同Region/不同Region)之间通过VPN 打通(Site-to-Site)。</li>
+              <li>跨账号、跨区域的云服务器之间内网互通(拨号VPN。可将不同账号下的云服务器拨入同一个FlexGW VPN 内，然后用VPN 分配的私网地址进行互通)。</li>
+            </ol>
+            <h5>登陆说明：</h5>
+            <ul>
+              <li>登陆地址：https://VM公网IP</li>
+              <li>使用VM的系统账号密码即可登入系统，即所有可通过SSH登陆主机的用户都可以登入该系统。</li>
+            </ul>
 
             <h3>软件组成</h3>
             <hr />
@@ -40,15 +51,15 @@
 
             <h3>程序说明</h3>
             <hr />
-            <h5>ECS VPN（即本程序）</h5>
+            <h5>FlexGW（即本程序）</h5>
             <ul>
               <li>目录：/usr/local/flexgw</li>
               <li>数据库文件：/usr/local/flexgw/instance/website.db</li>
-              <li>日志文件：/usr/local/flexgw/logs/website.log</li>
               <li>启动脚本：/etc/init.d/flexgw 或/usr/local/flexgw/website_console</li>
-              <li>实用脚本：/usr/local/flexgw/scripts</li>
+              <li>日志文件目录：/usr/local/flexgw/logs</li>
+              <li>实用脚本目录：/usr/local/flexgw/scripts</li>
             </ul>
-            <p>「数据库文件」保存了我们所有的VPN 配置，建议定期备份。如果数据库损坏，可通过「实用脚本」目录下的initdb.py 脚本对数据库进行初始化，初始化之后所有的配置将清空。</p>
+            <p>「数据库文件」保存了我们所有的VPN 配置，建议定期备份。如果数据库损坏，可通过「实用脚本目录」下的initdb.py 脚本对数据库进行初始化，初始化之后所有的配置将清空。</p>
             <h5>Strongswan</h5>
             <ul>
               <li>目录：/etc/strongswan</li>

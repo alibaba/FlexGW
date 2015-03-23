@@ -23,9 +23,19 @@
       {% endif %}
       {% endwith %}
       <div data-alert class="alert-box info">
-        虚拟IP 地址池: 为VPN Server 分配给客户端的虚拟IP 地址池。子网网段：为客户端连接之后可以访问的子网网段。可以填写多个子网，用英文「,」分割。
+        虚拟IP 地址池: 为VPN Server 分配给客户端的虚拟IP 地址池。子网网段：为客户端连接之后可以访问的子网网段。可以填写多个子网，用英文「,」分割。<br /><br />
+        注：保存修改后，会重载VPN 服务，所有客户端将会自动断开重连。
       </div>
       <form method="POST" action="{{ url_for('dial.settings') }}">
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.proto.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {{ form.proto }}
+          </div>
+        </div>
+
         <div class="row">
           <div class="large-3 columns">
             {{ form.ipool.label(class="right inline") }}
@@ -37,6 +47,24 @@
             {% else %}
             {{ form.ipool(placeholder="10.8.8.0/24", value=settings.ipool) }}
             {% endif %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.c2c.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {{ form.c2c }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.duplicate.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {{ form.duplicate }}
           </div>
         </div>
 

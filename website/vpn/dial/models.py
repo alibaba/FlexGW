@@ -40,10 +40,16 @@ class Settings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ipool = db.Column(db.String(80))
     subnet = db.Column(db.String(80))
+    c2c = db.Column(db.Boolean)
+    duplicate = db.Column(db.Boolean)
+    proto = db.Column(db.String(80))
 
-    def __init__(self, ipool, subnet):
+    def __init__(self, ipool, subnet, c2c, duplicate, proto):
         self.ipool = ipool
         self.subnet = subnet
+        self.c2c = c2c
+        self.duplicate = duplicate
+        self.proto = proto
 
     def __repr__(self):
         return '<Settings %s>' % self.id
