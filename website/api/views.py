@@ -8,7 +8,9 @@
 """
 
 
-from flask import Blueprint, jsonify
+import sys
+
+from flask import Blueprint, jsonify, current_app
 
 from flask.ext.login import login_required
 
@@ -39,8 +41,12 @@ def check_update():
     try:
         r = exec_command(cmd, timeout=10)
     except:
+        current_app.logger.error('[API]: exec_command error: %s:%s', cmd,
+                                 sys.exc_info()[1])
         return jsonify({"message": u"执行命令：`/usr/local/flexgw/scripts/update --check' 失败!"}), 500
     if r['return_code'] != 0:
+        current_app.logger.error('[API]: exec_command return: %s:%s:%s', cmd,
+                                 r['return_code'], r['stderr'])
         return jsonify({"message": u"检查更新失败，请手工执行命令：`/usr/local/flexgw/scripts/update --check'"}), 504
     for line in r['stdout'].split('\n'):
         if ' new ' in line:
