@@ -3,7 +3,7 @@
     website.api.views
     ~~~~~~~~~~~~~~~~~
 
-    vpn views:
+    vpn api views:
         /api/*
 """
 

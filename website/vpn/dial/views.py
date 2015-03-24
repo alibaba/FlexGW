@@ -3,7 +3,7 @@
     website.vpn.dial.views
     ~~~~~~~~~~~~~~~~~~~~~~
 
-    vpn sts views:
+    vpn dial views:
         /vpn/dial/settings
         /vpn/dial/add
         /vpn/dial/<int:id>

@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-    website.vpn.sts.services
-    ~~~~~~~~~~~~~~~~~~~~~~~~
+    website.vpn.dial.services
+    ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    vpn site-to-site services api.
+    vpn dial services api.
 """
 
 
 import copy
+import os
+import sys
 from datetime import datetime
 
-from flask import render_template, flash
+from flask import render_template, flash, current_app
 
 from website import db
 from website.services import exec_command
@@ -57,6 +59,8 @@ class VpnConfig(object):
             with open(self.client_conf_file, 'w') as f:
                 f.write(client_data)
         except:
+            current_app.logger.error('[Dial Services]: commit conf file error: %s',
+                                     sys.exc_info()[1])
             return False
         return True
 
@@ -121,6 +125,8 @@ class VpnServer(object):
         try:
             r = exec_command(cmd)
         except:
+            current_app.logger.error('[Dial Services]: exec_command error: %s:%s', cmd,
+                                     sys.exc_info()[1])
             flash(u'VPN 程序异常，无法调用，请排查操作系统相关设置！', 'alert')
             return False
         #: store cmd info
@@ -133,6 +139,8 @@ class VpnServer(object):
             return True
         if message:
             flash(message % r['stderr'], 'alert')
+        current_app.logger.error('[Dial Services]: exec_command return: %s:%s:%s', cmd,
+                                 r['return_code'], r['stderr'])
         return False
 
     def _reload_conf(self):
@@ -180,10 +188,15 @@ class VpnServer(object):
 
     @property
     def status(self):
+        if not os.path.isfile(self.pid_file):
+            return False
+
         try:
             with open(self.pid_file) as f:
                 raw_data = f.readlines()
         except:
+            current_app.logger.error('[Dial Services]: open pid file error: %s:%s',
+                                     self.pid_file, sys.exc_info()[1])
             return False
         if not raw_data:
             return False
@@ -199,6 +212,8 @@ class VpnServer(object):
             with open(self.log_file) as f:
                 raw_data = f.readlines()
         except:
+            current_app.logger.error('[Dial Services]: open status log file error: %s:%s',
+                                     self.log_file, sys.exc_info()[1])
             return False
         for line in raw_data:
             if line.startswith('CLIENT_LIST,%s,' % account_name):
