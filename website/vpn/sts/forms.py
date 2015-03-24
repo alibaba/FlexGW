@@ -49,6 +49,8 @@ def PublicIP(message=u"无效的公网地址！"):
             numbers = list(int(x) for x in parts)
             if numbers[0] == 10:
                 raise ValidationError(message)
+            elif numbers[0] == 100 and numbers[1] >= 64 and numbers[1] <= 127:
+                raise ValidationError(message)
             elif numbers[0] == 192 and numbers[1] == 168:
                 raise ValidationError(message)
             elif numbers[0] == 172 and numbers[1] >= 16 and numbers[1] <= 31:
@@ -68,11 +70,11 @@ class AddForm(Form):
     start_type = SelectField(u'启动类型',
                              choices=[('add', u'手工连接'), ('start', u'服务启动自动连接')])
     local_subnet = TextAreaField(u'本端子网',
-                                  validators=[DataRequired(message=u'这是一个必选项！'),
-                                              SubNets(message=u"无效的子网")])
-    remote_ip = StringField(u'对端EIP',
+                                 validators=[DataRequired(message=u'这是一个必选项！'),
+                                             SubNets(message=u"无效的子网")])
+    remote_ip = StringField(u'对端公网IP',
                             validators=[DataRequired(message=u'这是一个必选项！'),
-                                        PublicIP(message=u'EIP 应该为真实有效的公网IP 地址！')])
+                                        PublicIP(message=u'无效的公网地址！')])
     remote_subnet = TextAreaField(u'对端子网',
                                   validators=[DataRequired(message=u'这是一个必选项！'),
                                               SubNets(message=u"无效的子网")])

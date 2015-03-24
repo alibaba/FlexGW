@@ -8,9 +8,10 @@
 
 
 import json
+import sys
 import time
 
-from flask import render_template, flash
+from flask import render_template, flash, current_app
 
 from website import db
 from website.services import exec_command
@@ -48,6 +49,8 @@ class VpnConfig(object):
             with open(self.conf_file, 'w') as f:
                 f.write(data)
         except:
+            current_app.logger.error('[Ipsec Services]: commit conf file error: %s:%s',
+                                     self.conf_file, sys.exc_info()[1])
             return False
         return True
 
@@ -64,6 +67,8 @@ class VpnConfig(object):
             with open(self.secrets_file, 'w') as f:
                 f.write(data)
         except:
+            current_app.logger.error('[Ipsec Services]: commit secrets file error: %s:%s',
+                                     self.secrets_file, sys.exc_info()[1])
             return False
         return True
 
@@ -108,6 +113,8 @@ class VpnServer(object):
         try:
             r = exec_command(cmd)
         except:
+            current_app.logger.error('[Ipsec Services]: exec_command error: %s:%s',
+                                     cmd, sys.exc_info()[1])
             flash(u'VPN 程序异常，无法调用，请排查操作系统相关设置！', 'alert')
             return False
         #: store cmd info
@@ -120,6 +127,8 @@ class VpnServer(object):
             return True
         if message:
             flash(message % r['stderr'], 'alert')
+        current_app.logger.error('[Ipsec Services]: exec_command return: %s:%s:%s',
+                                 cmd, r['return_code'], r['stderr'])
         return False
 
     def _tunnel_exec(self, cmd, message=None):
@@ -129,12 +138,16 @@ class VpnServer(object):
         try:
             r = self.c_stdout[-1]
         except IndexError:
+            current_app.logger.error('[Ipsec Services]: exec_command return: %s:%s:%s:%s',
+                                     cmd, self.c_code, self.c_stdout, self.c_stderr)
             flash(u'命令已执行，但是没有返回数据。', 'alert')
             return False
         #: check return status
         if 'successfully' in r:
             return True
         else:
+            current_app.logger.error('[Ipsec Services]: exec_command return: %s:%s:%s:%s',
+                                     cmd, self.c_code, self.c_stdout, self.c_stderr)
             message = u'命令已执行，但是没有返回成功状态：%s' % r
             flash(message, 'alert')
             return False
@@ -238,8 +251,8 @@ class VpnServer(object):
 def vpn_settings(form, tunnel_id=None):
     tunnel = VpnConfig()
     vpn = VpnServer()
-    local_subnet = ','.join([ i.strip() for i in form.local_subnet.data.split(',')])
-    remote_subnet = ','.join([ i.strip() for i in form.remote_subnet.data.split(',')])
+    local_subnet = ','.join([i.strip() for i in form.local_subnet.data.split(',')])
+    remote_subnet = ','.join([i.strip() for i in form.remote_subnet.data.split(',')])
     rules = {'auto': form.start_type.data, 'esp': 'aes256-sha1-modp1024',
              'left': '0.0.0.0', 'leftsubnet': local_subnet,
              'leftid': form.tunnel_name.data, 'right': form.remote_ip.data,
