@@ -70,6 +70,9 @@ def settings(id):
     form.local_subnet.data = tunnel[0]['rules']['leftsubnet']
     form.remote_subnet.data = tunnel[0]['rules']['rightsubnet']
     form.start_type.data = tunnel[0]['rules']['auto']
+    (form.encryption_algorithm.data,
+     form.integrity_algorithm.data,
+     form.dh_algorithm.data) = tunnel[0]['rules']['esp'].split('-')
     return render_template('sts/view.html', tunnel=tunnel[0], form=form)
 
 

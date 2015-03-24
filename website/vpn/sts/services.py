@@ -253,7 +253,8 @@ def vpn_settings(form, tunnel_id=None):
     vpn = VpnServer()
     local_subnet = ','.join([i.strip() for i in form.local_subnet.data.split(',')])
     remote_subnet = ','.join([i.strip() for i in form.remote_subnet.data.split(',')])
-    rules = {'auto': form.start_type.data, 'esp': 'aes256-sha1-modp1024',
+    esp = '%s-%s-%s' % (form.encryption_algorithm.data, form.integrity_algorithm.data, form.dh_algorithm.data)
+    rules = {'auto': form.start_type.data, 'esp': esp,
              'left': '0.0.0.0', 'leftsubnet': local_subnet,
              'leftid': form.tunnel_name.data, 'right': form.remote_ip.data,
              'rightsubnet': remote_subnet, 'rightid': form.tunnel_name.data,
