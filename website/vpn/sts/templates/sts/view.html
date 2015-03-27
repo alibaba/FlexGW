@@ -46,26 +46,50 @@
         </div>
         <div class="row">
           <div class="large-3 columns">
-            {{ form.encryption_algorithm.label(class="right inline") }}
+            {{ form.ike_encryption_algorithm.label(class="right inline") }}
           </div>
           <div class="large-5 columns end">
-            {{ form.encryption_algorithm }}
+            {{ form.ike_encryption_algorithm }}
           </div>
         </div>
         <div class="row">
           <div class="large-3 columns">
-            {{ form.integrity_algorithm.label(class="right inline") }}
+            {{ form.ike_integrity_algorithm.label(class="right inline") }}
           </div>
           <div class="large-5 columns end">
-            {{ form.integrity_algorithm }}
+            {{ form.ike_integrity_algorithm }}
           </div>
         </div>
         <div class="row">
           <div class="large-3 columns">
-            {{ form.dh_algorithm.label(class="right inline") }}
+            {{ form.ike_dh_algorithm.label(class="right inline") }}
           </div>
           <div class="large-5 columns end">
-            {{ form.dh_algorithm }}
+            {{ form.ike_dh_algorithm }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.esp_encryption_algorithm.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {{ form.esp_encryption_algorithm }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.esp_integrity_algorithm.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {{ form.esp_integrity_algorithm }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.esp_dh_algorithm.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {{ form.esp_dh_algorithm }}
           </div>
         </div>
         <div class="row">

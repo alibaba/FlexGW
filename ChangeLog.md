@@ -6,7 +6,7 @@ Version 1.1.1
 
 完善稳定性、细节。
 
-* Ipsec VPN：支持可选的ESP 加密算法、签名算法、DH 算法。
+* IPSec VPN：支持可选的IKEv2/ESP 加密算法、签名算法、DH 组。
 * RPM 打包，不再依赖于pyenv。
 * 完善Website log 日志，捕获异常消息。
 
