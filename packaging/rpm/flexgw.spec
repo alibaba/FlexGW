@@ -49,8 +49,9 @@ cp -rv %{_builddir}/%{name}-%{version}/* %{buildroot}/usr/local/flexgw/
 cp -rv %{python_dir}/* %{buildroot}%{python_dir}/
 
 %post
-# db migrate
-if [ $1 -ne 1 ]; then
+# for upgrade
+if [ $1 -gt 1 ]; then
+    # db migrate
     SEED="$(date +%%Y%%m%%d%%H%%M%%S)"
     cp -fv "/usr/local/flexgw/instance/website.db" "/usr/local/flexgw/instance/website.db.${SEED}" &&
     /usr/local/flexgw/scripts/db-manage.py db upgrade --directory "/usr/local/flexgw/scripts/migrations" 1>/dev/null 2>&1 ||
@@ -58,6 +59,13 @@ if [ $1 -ne 1 ]; then
       echo "backup db is: /usr/local/flexgw/instance/website.db.${SEED}"
       exit 1
     } >&2
+    # update strongswan.conf
+    cp -fv "/etc/strongswan/strongswan.conf" "/etc/strongswan/strongswan.conf.${SEED}" &&
+    cp -fv "/usr/local/flexgw/rc/strongswan.conf" "/etc/strongswan/strongswan.conf" ||
+    { echo "error: upgrade strongswan.conf failed."
+      echo "backup strongswan.conf is: /etc/strongswan/strongswan.conf.${SEED}"
+      exit 1
+    }
 fi
 
 %clean
