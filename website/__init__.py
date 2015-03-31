@@ -26,6 +26,7 @@ file_handler.suffix = '%Y%m%d-%H%M'
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(Formatter('%(asctime)s %(levelname)s: %(message)s'))
 app.logger.addHandler(file_handler)
+app.logger.setLevel(logging.INFO)
 
 from flask import request_started, got_request_exception
 from website.helpers import log_request, log_exception
