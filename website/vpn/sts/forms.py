@@ -76,13 +76,10 @@ class AddForm(Form):
                                                     ('aes192', u'AES192'), ('aes256', u'AES256')])
 
     ike_integrity_algorithm = SelectField(u'IKEv2 验证算法',
-                                          choices=[('md5', u'MD5'), ('md5_128', u'MD5-128'),
-                                                   ('sha1', u'SHA1'), ('sha1_160', u'SHA1-160'),
+                                          choices=[('md5', u'MD5'), ('sha1', u'SHA1'),
                                                    ('sha2_256', u'SHA2-256'), ('sha2_384', u'SHA2-384'),
-                                                   ('sha2_512', u'SHA2-512'), ('sha2_256_96', u'SHA2-256-96'),
-                                                   ('aesxcbc', u'AES-XCBC'), ('aescmac', u'AES-CMAC'),
-                                                   ('aes128gmac', u'AES-128-GMAC'), ('aes192gmac', u'AES-192-GMAC'),
-                                                   ('aes256gmac', u'AES-256-GMAC')])
+                                                   ('sha2_512', u'SHA2-512'), ('aesxcbc', u'AES-XCBC'),
+                                                   ('aescmac', u'AES-CMAC')])
 
     ike_dh_algorithm = SelectField(u'IKEv2 DH 组',
                                    choices=[('modp768', u'Group 1 modp768'), ('modp1024', u'Group 2 modp1024'),
@@ -98,16 +95,17 @@ class AddForm(Form):
 
     esp_encryption_algorithm = SelectField(u'ESP 加密算法',
                                            choices=[('3des', u'3DES'), ('aes128', u'AES128'),
-                                                    ('aes192', u'AES192'), ('aes256', u'AES256')])
+                                                    ('aes192', u'AES192'), ('aes256', u'AES256'),
+                                                    ('aes128gcm64', u'AES128-GCM64'), ('aes192gcm64', u'AES192-GCM64'),
+                                                    ('aes256gcm64', u'AES256-GCM64'), ('aes128gcm96', u'AES128-GCM96'),
+                                                    ('aes192gcm96', u'AES192-GCM96'), ('aes256gcm96', u'AES256-GCM96'),
+                                                    ('aes128gcm128', u'AES128-GCM128'), ('aes192gcm128', u'AES192-GCM128'),
+                                                    ('aes256gcm128', u'AES256-GCM128')])
 
     esp_integrity_algorithm = SelectField(u'ESP 验证算法',
-                                          choices=[('md5', u'MD5'), ('md5_128', u'MD5-128'),
-                                                   ('sha1', u'SHA1'), ('sha1_160', u'SHA1-160'),
+                                          choices=[('md5', u'MD5'), ('sha1', u'SHA1'),
                                                    ('sha2_256', u'SHA2-256'), ('sha2_384', u'SHA2-384'),
-                                                   ('sha2_512', u'SHA2-512'), ('sha2_256_96', u'SHA2-256-96'),
-                                                   ('aesxcbc', u'AES-XCBC'), ('aescmac', u'AES-CMAC'),
-                                                   ('aes128gmac', u'AES-128-GMAC'), ('aes192gmac', u'AES-192-GMAC'),
-                                                   ('aes256gmac', u'AES-256-GMAC')])
+                                                   ('sha2_512', u'SHA2-512'), ('aesxcbc', u'AES-XCBC')])
 
     esp_dh_algorithm = SelectField(u'ESP DH 组',
                                    choices=[('null', u'无'),
