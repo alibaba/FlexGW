@@ -62,6 +62,8 @@ start()
     status
     if [ $? -ne 0 ]; then
         echo $"starting website..."
+        [ -f /usr/local/flexgw/instance/snat-rules.iptables ] &&
+        iptables-restore --table=nat < /usr/local/flexgw/instance/snat-rules.iptables
         $website_prog -D -c $website_gunicorn_etc $website_app --pythonpath $script_home
         sleep 2
         status
