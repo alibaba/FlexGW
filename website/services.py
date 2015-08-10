@@ -12,8 +12,8 @@ import subprocess
 from threading import Timer
 
 
-def exec_command(cmd, timeout=5):
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+def exec_command(cmd, timeout=5, stdout=subprocess.PIPE):
+    proc = subprocess.Popen(cmd, stdout=stdout,
                             stderr=subprocess.PIPE)
     # settings exec timeout
     timer = Timer(timeout, proc.kill)
