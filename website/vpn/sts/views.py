@@ -70,6 +70,15 @@ def settings(id):
     form.local_subnet.data = tunnel[0]['rules']['leftsubnet']
     form.remote_subnet.data = tunnel[0]['rules']['rightsubnet']
     form.start_type.data = tunnel[0]['rules']['auto']
+    # Backward compatible v1.1.0
+    esp_settings = tunnel[0]['rules']['esp'].split('-')
+    form.esp_encryption_algorithm.data = esp_settings[0]
+    form.esp_integrity_algorithm.data = esp_settings[1]
+    form.esp_dh_algorithm.data = esp_settings[2] if len(esp_settings) == 3 else 'null'
+    ike_settings = tunnel[0]['rules'].get('ike', 'aes128-sha1-modp2048').split('-')
+    form.ike_encryption_algorithm.data = ike_settings[0]
+    form.ike_integrity_algorithm.data = ike_settings[1]
+    form.ike_dh_algorithm.data = ike_settings[2]
     return render_template('sts/view.html', tunnel=tunnel[0], form=form)
 
 

@@ -6,7 +6,6 @@ Summary:   a vpn, snat web app for ecs.
 License:   Commercial
 Group:     Applications/Internet
 Source0:   %{name}-%{version}.tar.bz2
-Source1:   pyenv.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 AutoReqProv: no
@@ -24,34 +23,35 @@ a vpn, snat web app for ecs vpc vm.
 
 %prep
 %setup -q -b 0
-%setup -q -b 1 -c -n %{pyenv_build_dir}
 
 %build
-# set env
-export PYENV_ROOT=%{pyenv_build_dir}/pyenv
-%{pyenv_build_dir}/pyenv/bin/pyenv init -
-
 # install python
-echo "building pyenv"
-%{pyenv_build_dir}/pyenv/bin/pyenv install %{py_version}
-%{pyenv_build_dir}/pyenv/bin/pyenv rehash
+echo "building python..."
+[ -f %{python_dir} ] && rm -rf %{python_dir}
+export PYTHON_BUILD_BUILD_PATH=/tmp/rpmbuild/PYTHON/sources
+export PYTHON_BUILD_CACHE_PATH=/tmp/rpmbuild/PYTHON/cache
+python-build -k %{python_version} %{python_dir}
 
 # install pip requirements.txt
-%{pyenv_build_dir}/pyenv/versions/%{py_version}/bin/pip install -r %{_builddir}/%{name}-%{version}/requirements.txt
+echo "install requirements..."
+export ac_cv_func_malloc_0_nonnull=yes
+%{python_dir}/bin/pip install -r %{_builddir}/%{name}-%{version}/requirements.txt
+unset ac_cv_func_malloc_0_nonnull
 
 %install
 mkdir -p %{buildroot}/etc/init.d/
 mkdir -p %{buildroot}/usr/local/flexgw/
-mkdir -p %{buildroot}/usr/local/flexgw/pyenv/
+mkdir -p %{buildroot}%{python_dir}/
 
 mv -fv %{_builddir}/%{name}-%{version}/scripts/initflexgw %{buildroot}/etc/init.d/initflexgw
 cp -fv %{_builddir}/%{name}-%{version}/website_console %{buildroot}/etc/init.d/flexgw
 cp -rv %{_builddir}/%{name}-%{version}/* %{buildroot}/usr/local/flexgw/
-cp -rv %{pyenv_build_dir}/pyenv/* %{buildroot}/usr/local/flexgw/pyenv/
+cp -rv %{python_dir}/* %{buildroot}%{python_dir}/
 
 %post
-# db migrate
-if [ $1 -ne 1 ]; then
+# for upgrade
+if [ $1 -gt 1 ]; then
+    # db migrate
     SEED="$(date +%%Y%%m%%d%%H%%M%%S)"
     cp -fv "/usr/local/flexgw/instance/website.db" "/usr/local/flexgw/instance/website.db.${SEED}" &&
     /usr/local/flexgw/scripts/db-manage.py db upgrade --directory "/usr/local/flexgw/scripts/migrations" 1>/dev/null 2>&1 ||
@@ -59,13 +59,20 @@ if [ $1 -ne 1 ]; then
       echo "backup db is: /usr/local/flexgw/instance/website.db.${SEED}"
       exit 1
     } >&2
+    # update strongswan.conf
+    cp -fv "/etc/strongswan/strongswan.conf" "/etc/strongswan/strongswan.conf.${SEED}" &&
+    cp -fv "/usr/local/flexgw/rc/strongswan.conf" "/etc/strongswan/strongswan.conf" ||
+    { echo "error: upgrade strongswan.conf failed."
+      echo "backup strongswan.conf is: /etc/strongswan/strongswan.conf.${SEED}"
+      exit 1
+    }
 fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 rm -rf ${_builddir}
 rm -rf %{buildroot}
-rm -rf %{pyenv_build_dir}
+rm -rf %{python_dir}
 
 %files
 %defattr(-,root,root)
@@ -78,6 +85,9 @@ rm -rf %{pyenv_build_dir}
 %config(noreplace) /usr/local/flexgw/instance/*
 
 %changelog
+
+* Mon Mar 23 2015 xiong.xiaox <xiong.xiaox@alibaba-inc.com> - 1.1.0
+- Release 1.1
 
 * Thu Aug 21 2014 xiong.xiaox <xiong.xiaox@alibaba-inc.com> - 1.0.0
 - Release 1.0

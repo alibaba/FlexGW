@@ -7,6 +7,8 @@
 """
 
 
+import sys
+
 from simplepam import authenticate
 
 from flask import current_app
@@ -49,11 +51,12 @@ class User(object):
         try:
             r = exec_command(cmd)
         except:
-            current_app.logger.error('[Account System]: exec_command error: %s', cmd)
+            current_app.logger.error('[Account System]: exec_command error: %s:%s', cmd,
+                                     sys.exc_info()[1])
             return None
         if r['return_code'] != 0:
-            current_app.logger.error('[Account System]: exec_command return: %s:%s',
-                                     cmd, r['return_code'])
+            current_app.logger.error('[Account System]: exec_command return: %s:%s:%s',
+                                     cmd, r['return_code'], r['stderr'])
             return None
         if id:
             username = r['stdout'].split(':')[0]
@@ -66,6 +69,6 @@ class User(object):
     def check_auth(cls, username, password):
         r = authenticate(str(username), str(password), service='sshd')
         if not r:
-            current_app.logger.error('[Account System]: pam auth failed return: %s',
-                                     r)
+            current_app.logger.error('[Account System]: %s pam auth failed return: %s',
+                                     username, r)
         return r

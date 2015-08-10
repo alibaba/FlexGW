@@ -46,6 +46,54 @@
         </div>
         <div class="row">
           <div class="large-3 columns">
+            {{ form.ike_encryption_algorithm.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {{ form.ike_encryption_algorithm }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.ike_integrity_algorithm.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {{ form.ike_integrity_algorithm }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.ike_dh_algorithm.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {{ form.ike_dh_algorithm }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.esp_encryption_algorithm.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {{ form.esp_encryption_algorithm }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.esp_integrity_algorithm.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {{ form.esp_integrity_algorithm }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">
+            {{ form.esp_dh_algorithm.label(class="right inline") }}
+          </div>
+          <div class="large-5 columns end">
+            {{ form.esp_dh_algorithm }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">
             {{ form.local_subnet.label(class="right inline") }}
           </div>
           <div class="large-5 columns end">

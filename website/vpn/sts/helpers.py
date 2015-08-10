@@ -7,9 +7,18 @@
 """
 
 
+import sys
+
+from flask import current_app
+
+
 def ipsec_conf_parser(file):
-    with open(file, mode='r') as f:
-        raw_data = [l.strip() for l in f.readlines() if l.strip()]
+    try:
+        with open(file, mode='r') as f:
+            raw_data = [l.strip() for l in f.readlines() if l.strip()]
+    except:
+        current_app.logger.error('[Ipsec Helpers]: read ipsec conf file error: %s:%s',
+                                 file, sys.exc_info()[1])
     tunnels = {}
     tunnel = None
     for line in raw_data:
