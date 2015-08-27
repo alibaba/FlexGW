@@ -24,7 +24,7 @@ mkdir -p /tmp/rpmbuild/PYTHON/sources
 [ -d /tmp/rpmbuild/SOURCES/flexgw ] && rm -rf /tmp/rpmbuild/SOURCES/flexgw
 
 #clone repositories
-git clone git@gitlab.alibaba-inc.com:netplatform/ecs-vpn.git /tmp/rpmbuild/SOURCES/flexgw
+git clone https://github.com/alibaba/FlexGW.git /tmp/rpmbuild/SOURCES/flexgw
 
 #archive source from git repositories
 cd /tmp/rpmbuild/SOURCES/flexgw
