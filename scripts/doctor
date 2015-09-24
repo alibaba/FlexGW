@@ -47,7 +47,7 @@ fi
 
 # openvpn
 if ! command -v openvpn 1>/dev/null 2>&1; then
-  echo -e "FlexGW: strongswan is not installed.\n" 1>&2
+  echo -e "FlexGW: openvpn is not installed.\n" 1>&2
   STATUS=$((STATUS+1))
 fi
 
